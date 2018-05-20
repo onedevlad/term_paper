@@ -1,21 +1,17 @@
 #include <string>
 #include <vector>
 
-#ifndef FLIGHT_H
-#define FLIGHT_H
 
-// #include "Table.h"
+#ifndef PLANE_H
+#define PLANE_H
 
-class Flight {
+class Plane {
   public:
     static std::vector<std::string> headers;
-    static std::vector<Flight> flights;
+    static std::vector<Plane> flights;
     int entryLine;
-    std::string flightID;
-    int passangersCount;
-    std::string departureDate;
-    std::string departureTime;
     std::string planeID;
+    int maxPassangersCount;
     static void load();
     static void setHeaders(std::vector<std::string>);
     static std::vector<std::vector<std::string>> serialize();

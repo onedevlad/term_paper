@@ -6,15 +6,15 @@
 
 class Renderer {
   private:
-    int colsCount;
-    int maxColWidth;
-    int tableWidth;
-    void analyse(std::vector<std::vector<std::string>> table);
+    int colsCount=0;
+    int maxColWidth=0;
+    int tableWidth=0;
     std::string padCenter(int, const std::string&);
-    std::string getRowSeparator(bool);
-    void render(std::vector<std::vector<std::string>>);
   public:
-    Renderer(std::vector<std::vector<std::string>>);
+    void analyseTable(std::vector<std::vector<std::string>>);
+    void analyseLine(std::vector<std::string>);
+    std::string getRowSeparator(bool);
+    void renderTable(std::vector<std::vector<std::string>>);
 };
 
 #endif

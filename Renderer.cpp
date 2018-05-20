@@ -7,7 +7,17 @@
 using namespace std;
 
 
-void Renderer::analyse(vector<vector<string>> table) {
+string Renderer::padCenter(int width, const string& str) {
+  int len = str.length();
+  if(width < len) return str;
+
+  int diff = width - len;
+  int padL = diff/2;
+  int padR = diff - padL;
+  return string(padL, ' ') + str + string(padR, ' ');
+}
+
+void Renderer::analyseTable(vector<vector<string>> table) {
   maxColWidth = table[0][0].length();
   colsCount = table[0].size();
 
@@ -23,22 +33,14 @@ void Renderer::analyse(vector<vector<string>> table) {
   tableWidth = colsCount * maxColWidth + colsCount + 1;
 }
 
-string Renderer::padCenter(int width, const string& str) {
-  int len = str.length();
-  if(width < len) return str;
-
-  int diff = width - len;
-  int padL = diff/2;
-  int padR = diff - padL;
-  return string(padL, ' ') + str + string(padR, ' ');
-}
-
 string Renderer::getRowSeparator(bool outermostRow) {
   char cornerChar = outermostRow ? '+' : '|';
-  return cornerChar + string(tableWidth-2, '-') + cornerChar;
+  return cornerChar + string(tableWidth - 2, '-') + cornerChar;
 }
 
-void Renderer::render(vector<vector<string>> table) {
+void Renderer::renderTable(vector<vector<string>> table) {
+  analyseTable(table);
+
   cout << getRowSeparator(true);
   cout << endl;
 
@@ -54,9 +56,4 @@ void Renderer::render(vector<vector<string>> table) {
     cout << getRowSeparator(lastRow);
     cout << endl;
   }
-}
-
-Renderer::Renderer(vector<vector<string>> table) {
-  analyse(table);
-  render(table);
 }

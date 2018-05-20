@@ -33,6 +33,13 @@ void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (
   }
 }
 
+void Table::render() {
+  renderTable(serializer());
+}
+
+Table::Table(vector<vector<string>> (*_serializer)()) {
+  serializer = _serializer;
+}
 
 // class Table {
 // private:
