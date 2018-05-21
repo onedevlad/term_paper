@@ -26,6 +26,8 @@ vector<vector<string>> Flight::serialize() {
     record.push_back(to_string(Flight::flights[i].passangersCount));
     record.push_back(Flight::flights[i].departureDate);
     record.push_back(Flight::flights[i].departureTime);
+    record.push_back(Flight::flights[i].arrivalDate);
+    record.push_back(Flight::flights[i].arrivalTime);
     record.push_back(Flight::flights[i].planeID);
 
     result.push_back(record);
@@ -38,7 +40,7 @@ void Flight::setHeaders(vector<string> _headers) {
   headers = _headers;
 }
 
-void Flight::factory(int _entryLine, vector<string> rawData) {
+void Flight::factory(int _entryLine, vector<string> rawData, bool fsSync) {
   Flight obj(_entryLine, rawData);
   flights.push_back(obj);
 }
@@ -50,7 +52,9 @@ Flight::Flight(int _entryLine, vector<string> rawData) {
   passangersCount = Utils::strToInt(rawData[1]);
   departureDate = rawData[2];
   departureTime = rawData[3];
-  planeID = rawData[4];
+  arrivalDate = rawData[4];
+  arrivalTime = rawData[5];
+  planeID = rawData[6];
 
   // cout << "Created flight #" << flightID << " on " << planeID << endl;
 }

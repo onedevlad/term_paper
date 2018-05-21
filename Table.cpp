@@ -19,7 +19,7 @@ vector<string> Table::readFile(string filename) {
   return file;
 };
 
-void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (*factoryCB)(int, vector<string>)) {
+void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (*factoryCB)(int, vector<string>, bool)) {
   for(int i=0; i<file.size(); i++) {
     vector<string> items;
     string item;
@@ -29,7 +29,7 @@ void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (
     while(getline(iss, item, '\t')) items.push_back(item);
 
     if(!i) headersCB(items);
-    else factoryCB(i, items);
+    else factoryCB(i, items, false);
   }
 }
 
