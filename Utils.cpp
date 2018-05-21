@@ -49,3 +49,8 @@ string Utils::askForStr(string item) {
   getline(cin, userInput);
   return Utils::trim(userInput);
 }
+
+void Utils::setHeaders(vector<string>* originalHeaders, vector<string>* updatedHeaders) {
+  originalHeaders->clear();
+  originalHeaders->insert(originalHeaders->end(), updatedHeaders->begin(), updatedHeaders->end());
+}

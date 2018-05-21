@@ -6,7 +6,17 @@
 
 #include "Table.h"
 
+#include "Flight.h"
+#include "Plane.h"
+#include "Passanger.h"
+
 using namespace std;
+
+vector<string> Flight::headers = {};
+
+void Table::setHeaders(vector<string> _headers) {
+  headers = _headers;
+}
 
 vector<string> Table::readFile(string filename) {
   string line;
@@ -19,7 +29,20 @@ vector<string> Table::readFile(string filename) {
   return file;
 };
 
-void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (*factoryCB)(int, vector<string>)) {
+void Table::writeFile(string filename, vector<vector<string>> data) {
+  ofstream table;
+  table.open("./storage/" + filename + ".txt");
+  for(int i=0; i<data.size(); i++) {
+    for(int j=0; j<data[i].size(); j++) {
+      table << data[i][j];
+      if(j != data[i].size() - 1) table << '\t';
+    }
+    table << endl;
+  }
+  table.close();
+}
+
+void Table::parseFile(vector<string> file, void (*headersCB)(vector<string>), void (*factoryCB)(int, vector<string>, bool)) {
   for(int i=0; i<file.size(); i++) {
     vector<string> items;
     string item;
@@ -29,7 +52,7 @@ void Table::parse(vector<string> file, void (*headersCB)(vector<string>), void (
     while(getline(iss, item, '\t')) items.push_back(item);
 
     if(!i) headersCB(items);
-    else factoryCB(i, items);
+    else factoryCB(i, items, false);
   }
 }
 
@@ -37,7 +60,7 @@ void Table::render() {
   renderTable(serializer());
 }
 
-Table::Table(vector<vector<string>> (*_serializer)()) {
+Table::Table(string tableName, vector<vector<string>> (*_serializer)()) {
   serializer = _serializer;
 }
 

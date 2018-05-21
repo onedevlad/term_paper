@@ -1,3 +1,6 @@
+#include <string>
+#include <vector>
+
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -9,6 +12,8 @@ class Utils {
     static int strToInt(std::string);
     static int askForInt(std::string, int, int);
     static std::string askForStr(std::string);
+    static void setHeaders(std::vector<std::string>*, std::vector<std::string>*);
+    static void help();
 };
 
 #endif

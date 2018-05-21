@@ -1,22 +1,25 @@
 #include <string>
 #include <vector>
 
+#ifndef PASSANGER_H
+#define PASSANGER_H
 
-#ifndef PLANE_H
-#define PLANE_H
-
-class Plane {
+class Passanger {
   public:
     static std::vector<std::string> headers;
-    static std::vector<Plane> planes;
+    static std::vector<Passanger> passangers;
     int entryLine;
-    std::string planeID;
-    int maxPassangersCount;
+
+    std::string passangerID;
+    std::string lastName;
+    std::string firstName;
+    std::string flightID;
+
     static void load();
     static void setHeaders(std::vector<std::string>);
     static std::vector<std::vector<std::string>> serialize();
     static void factory(int, std::vector<std::string>, bool);
-    Plane(int, std::vector<std::string>);
+    Passanger(int, std::vector<std::string>);
 };
 
 #endif
