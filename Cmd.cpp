@@ -48,14 +48,23 @@ void Cmd::add(string fieldName) {
   Factory factory;
 
   if(fieldName == "flight") {
-    headers = Flight::headers;
+    headers = Table::TFlights.headers;
     factory = Flight::factory;
     size = Flight::flights.size();
   }
   else if(fieldName == "passanger") {
-    headers = Passanger::headers;
+    headers = Table::TPassangers.headers;
     factory = Passanger::factory;
     size = Passanger::passangers.size();
+  }
+  else if(fieldName == "plane") {
+    headers = Table::TPlanes.headers;
+    factory = Plane::factory;
+    size = Plane::planes.size();
+  }
+  else {
+    cout << "`" << fieldName << "` is not a valid member." << endl;
+    return;
   }
 
   vector<string> data;

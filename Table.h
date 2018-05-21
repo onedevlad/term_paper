@@ -9,15 +9,19 @@
 typedef std::vector<std::vector<std::string>> (*Serializer)();
 
 class Table : public Renderer {
+private:
+  std::string tableName;
 public:
+  std::vector<std::string> headers;
   Serializer serializer;
   static Table TFlights;
   static Table TPassangers;
   static Table TPlanes;
-  static std::vector<std::string> readFile(std::string);
-  static void parse(std::vector<std::string>, void (*)(std::vector<std::string>), void (*)(int, std::vector<std::string>, bool));
+  std::vector<std::string> readFile();
+  void writeFile(std::vector<std::vector<std::string>>);
+  void parse(std::vector<std::string>, void (*)(int, std::vector<std::string>, bool));
   void render();
-  Table(std::vector<std::vector<std::string>>(*)());
+  Table(std::string, std::vector<std::vector<std::string>>(*)());
 };
 
 #endif

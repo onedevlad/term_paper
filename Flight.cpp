@@ -10,15 +10,14 @@ using namespace std;
 
 // Static vectors need to be initialized
 vector<Flight> Flight::flights = {};
-vector<string> Flight::headers = {};
 
 void Flight::load() {
-  Table::parse(Table::readFile("Flights"), Flight::setHeaders, Flight::factory);
+  Table::TFlights.parse(Table::TFlights.readFile(), Flight::factory);
 }
 
 vector<vector<string>> Flight::serialize() {
   vector<vector<string>> result;
-  result.push_back(Flight::headers);
+  result.push_back(Table::TFlights.headers);
 
   for(int i=0; i<Flight::flights.size(); i++) {
     vector<string> record;
@@ -36,13 +35,11 @@ vector<vector<string>> Flight::serialize() {
   return result;
 }
 
-void Flight::setHeaders(vector<string> _headers) {
-  headers = _headers;
-}
 
 void Flight::factory(int _entryLine, vector<string> rawData, bool fsSync) {
   Flight obj(_entryLine, rawData);
   flights.push_back(obj);
+  if(fsSync) Table::TFlights.writeFile(serialize());
 }
 
 Flight::Flight(int _entryLine, vector<string> rawData) {

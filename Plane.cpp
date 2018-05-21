@@ -9,20 +9,15 @@
 using namespace std;
 
 // Static vectors need to be initialized
-vector<string> Plane::headers = {};
 vector<Plane> Plane::planes = {};
 
 void Plane::load() {
-  Table::parse(Table::readFile("Planes"), Plane::setHeaders, Plane::factory);
-}
-
-void Plane::setHeaders(vector<string> _headers) {
-  headers = _headers;
+  Table::TPlanes.parse(Table::TPlanes.readFile(), Plane::factory);
 }
 
 vector<vector<string>> Plane::serialize() {
   vector<vector<string>> result;
-  result.push_back(Plane::headers);
+  result.push_back(Table::TPlanes.headers);
 
   for(int i=0; i<Plane::planes.size(); i++) {
     vector<string> record;
@@ -38,7 +33,7 @@ vector<vector<string>> Plane::serialize() {
 void Plane::factory(int _entryLine, vector<string> rawData, bool fsSync) {
   Plane obj(_entryLine, rawData);
   planes.push_back(obj);
-  // if(fsSync) Table::writeFile("Planes", serialize());
+  if(fsSync) Table::TPlanes.writeFile(serialize());
 }
 
 Plane::Plane(int _entryLine, vector<string> rawData) {

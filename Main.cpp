@@ -10,18 +10,18 @@
 
 using namespace std;
 
-Table Table::TFlights = Table(Flight::serialize);
-Table Table::TPassangers = Table(Passanger::serialize);
-Table Table::TPlanes = Table(Plane::serialize);
+Table Table::TFlights = Table("Flights", Flight::serialize);
+Table Table::TPassangers = Table("Passangers", Passanger::serialize);
+Table Table::TPlanes = Table("Planes", Plane::serialize);
 
 int main() {
   cout << endl;
 
-  cout << "Type `help` for help." << endl << endl;
-
   Flight::load();
   Passanger::load();
   Plane::load();
+
+  cout << "Type `help` for help." << endl << endl;
 
   while(true) {
     cout << "$> ";

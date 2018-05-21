@@ -9,20 +9,15 @@
 using namespace std;
 
 void Passanger::load() {
-  Table::parse(Table::readFile("Passangers"), Passanger::setHeaders, Passanger::factory);
-}
-
-void Passanger::setHeaders(vector<string> _headers) {
-  headers = _headers;
+  Table::TPassangers.parse(Table::TPassangers.readFile(), Passanger::factory);
 }
 
 // Static vectors need to be initialized
-vector<string> Passanger::headers = {};
 vector<Passanger> Passanger::passangers = {};
 
 vector<vector<string>> Passanger::serialize() {
   vector<vector<string>> result;
-  result.push_back(Passanger::headers);
+  result.push_back(Table::TPassangers.headers);
 
   for(int i=0; i<passangers.size(); i++) {
     vector<string> record;
@@ -42,7 +37,7 @@ void Passanger::factory(int _entryLine, vector<string> rawData, bool fsSync) {
   Passanger obj(_entryLine, rawData);
   Passanger::passangers.push_back(obj);
 
-  // if(fsSync) Table::TPassangers.writeFile(serialize());
+  if(fsSync) Table::TPassangers.writeFile(serialize());
 }
 
 Passanger::Passanger(int _entryLine, vector<string> rawData) {

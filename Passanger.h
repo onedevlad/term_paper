@@ -6,7 +6,6 @@
 
 class Passanger {
   public:
-    static std::vector<std::string> headers;
     static std::vector<Passanger> passangers;
     int entryLine;
 
@@ -18,7 +17,6 @@ class Passanger {
     static std::vector<std::vector<std::string>> serialize();
     static void factory(int, std::vector<std::string>, bool);
     static void load();
-    static void setHeaders(std::vector<std::string>);
     Passanger(int, std::vector<std::string>);
 };
 

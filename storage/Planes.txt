@@ -1,3 +1,4 @@
 Plane ID	Max passangers
 QR507	485
 QP09	500
+123	500
