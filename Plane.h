@@ -7,14 +7,13 @@
 
 class Plane {
   public:
-    static std::vector<std::string> headers;
     static std::vector<Plane> planes;
     int entryLine;
     std::string planeID;
-    int maxPassangersCount;
-    static void load();
-    static void setHeaders(std::vector<std::string>);
+    std::string maxPassangersCount;
     static std::vector<std::vector<std::string>> serialize();
+    static std::vector<std::string> serializeLn(Plane);
+    static void load();
     static void factory(int, std::vector<std::string>, bool);
     Plane(int, std::vector<std::string>);
 };

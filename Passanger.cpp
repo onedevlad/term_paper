@@ -8,40 +8,36 @@
 
 using namespace std;
 
+void Passanger::load() {
+  Table::TPassangers.parse(Table::TPassangers.readFile(), Passanger::factory);
+}
+
 // Static vectors need to be initialized
 vector<Passanger> Passanger::passangers = {};
-vector<string> Passanger::headers = {};
-
-void Passanger::load() {
-  Table::parseFile(Table::readFile("Passangers"), Passanger::setHeaders, Passanger::factory);
-}
 
 vector<vector<string>> Passanger::serialize() {
   vector<vector<string>> result;
-  result.push_back(Passanger::headers);
+  result.push_back(Table::TPassangers.headers);
 
-  for(int i=0; i<Passanger::passangers.size(); i++) {
+  for(int i=0; i<passangers.size(); i++) {
     vector<string> record;
-    record.push_back(Passanger::passangers[i].passangerID);
-    record.push_back(Passanger::passangers[i].lastName);
-    record.push_back(Passanger::passangers[i].firstName);
-    record.push_back(Passanger::passangers[i].flightID);
+    record.push_back(passangers[i].passangerID);
+    record.push_back(passangers[i].lastName);
+    record.push_back(passangers[i].firstName);
+    record.push_back(passangers[i].flightID);
 
     result.push_back(record);
   }
 
   return result;
-}
 
-
-void Passanger::setHeaders(vector<string> _headers) {
-  headers = _headers;
 }
 
 void Passanger::factory(int _entryLine, vector<string> rawData, bool fsSync) {
   Passanger obj(_entryLine, rawData);
-  passangers.push_back(obj);
-  if(fsSync) Table::writeFile("Passanger", serialize());
+  Passanger::passangers.push_back(obj);
+
+  if(fsSync) Table::TPassangers.writeFile(serialize());
 }
 
 Passanger::Passanger(int _entryLine, vector<string> rawData) {
@@ -51,6 +47,4 @@ Passanger::Passanger(int _entryLine, vector<string> rawData) {
   lastName = rawData[1];
   firstName = rawData[2];
   flightID = rawData[3];
-
-  // cout << "Created passanger #" << passangerID << " on " << planeID << endl;
 }

@@ -1,4 +1,0 @@
-Passanger ID	Last Name	First Name	Flight ID
-AB3141592	Ivanov	Ivan	NP2003
-AB2718281	Petrov	Petro	UI4923
-BC8887468	Kozlov	Petro	QR123

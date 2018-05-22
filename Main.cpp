@@ -1,28 +1,27 @@
 #include <iostream>
-#include <vector>
-#include <string>
 
-#include "Table.h"
-#include "Flight.h"
-#include "Plane.h"
-#include "Passanger.h"
 #include "Cmd.h"
+#include "Flight.h"
+#include "Passanger.h"
+#include "Plane.h"
+#include "Renderer.h"
+#include "Table.h"
+
 
 using namespace std;
 
-
-Table Table::TFlights = Table(Flight::serialize);
-Table Table::TPlanes = Table(Plane::serialize);
-Table Table::TPassangers = Table(Passanger::serialize);
+Table Table::TFlights = Table("Flights", Flight::serialize);
+Table Table::TPassangers = Table("Passangers", Passanger::serialize);
+Table Table::TPlanes = Table("Planes", Plane::serialize);
 
 int main() {
   cout << endl;
 
-  cout << "Type `help` for help." << endl << endl;
+  Flight::load();
+  Passanger::load();
+  Plane::load();
 
-  // Flight::load();
-  // Plane::load();
-  // Passanger::load();
+  cout << "Type `help` for help." << endl << endl;
 
   while(true) {
     cout << "$> ";

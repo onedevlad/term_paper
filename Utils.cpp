@@ -7,7 +7,7 @@
 using namespace std;
 
 
-string Utils::enterPrompt = "Please, enter";
+string Utils::enterPrompt = "Please, enter ";
 
 string Utils::trim(const string& str) {
   size_t first = str.find_first_not_of(' ');
@@ -22,6 +22,10 @@ bool Utils::isNumber(const string& s) {
   return !s.empty() && it == s.end();
 }
 
+bool Utils::contains(string str, string substr) {
+  return str.find(substr) != string::npos;
+}
+
 int Utils::strToInt(string str) {
   if(isNumber(str)) return stol(str);
   return -1;
@@ -31,13 +35,13 @@ int Utils::askForInt(string item, int minBound, int maxBound) {
   int enteredInt;
 
   enter:
-    cout << Utils::enterPrompt << ' ' << item << " ("<< minBound <<'-'<< maxBound << "): ";
+    cout << Utils::enterPrompt << item << " ("<< minBound <<'-'<< maxBound << "): ";
     string userInput;
     getline(cin, userInput);
 
   enteredInt = Utils::strToInt(Utils::trim(userInput));
   if(enteredInt < minBound || enteredInt > maxBound) {
-    cout << "Invalid data provided. Try again." << endl;
+    cout << "NaN value provided. Try again." << endl;
     goto enter;
   }
   return enteredInt;
@@ -48,9 +52,4 @@ string Utils::askForStr(string item) {
   string userInput;
   getline(cin, userInput);
   return Utils::trim(userInput);
-}
-
-void Utils::setHeaders(vector<string>* originalHeaders, vector<string>* updatedHeaders) {
-  originalHeaders->clear();
-  originalHeaders->insert(originalHeaders->end(), updatedHeaders->begin(), updatedHeaders->end());
 }
