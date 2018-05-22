@@ -19,13 +19,15 @@ vector<vector<string>> Plane::serialize() {
   vector<vector<string>> result;
   result.push_back(Table::TPlanes.headers);
 
-  for(int i=0; i<Plane::planes.size(); i++) {
-    vector<string> record;
-    record.push_back(Plane::planes[i].planeID);
-    record.push_back(to_string(Plane::planes[i].maxPassangersCount));
+  for(int i=0; i<planes.size(); i++) serializeLn(planes[i]);
 
-    result.push_back(record);
-  }
+  return result;
+}
+
+vector<string> Plane::serializeLn(Plane obj) {
+  vector<string> result;
+  result.push_back(obj.planeID);
+  result.push_back(obj.maxPassangersCount);
 
   return result;
 }
@@ -40,5 +42,5 @@ Plane::Plane(int _entryLine, vector<string> rawData) {
   entryLine = _entryLine;
 
   planeID = rawData[0];
-  maxPassangersCount = Utils::strToInt(rawData[1]);
+  maxPassangersCount = rawData[1];
 }

@@ -11,6 +11,7 @@ class Cmd {
     static void show(std::string);
     static void add(std::string);
     static void tables();
+    static void find(std::string);
     static void help();
     static void invalid();
 };

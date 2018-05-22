@@ -10,8 +10,9 @@ class Plane {
     static std::vector<Plane> planes;
     int entryLine;
     std::string planeID;
-    int maxPassangersCount;
+    std::string maxPassangersCount;
     static std::vector<std::vector<std::string>> serialize();
+    static std::vector<std::string> serializeLn(Plane);
     static void load();
     static void factory(int, std::vector<std::string>, bool);
     Plane(int, std::vector<std::string>);
