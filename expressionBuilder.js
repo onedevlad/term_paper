@@ -6,97 +6,102 @@
 //     &&, AND
 //     ||, OR
 
-// const condition = '(0 == 0) && ((1) != 0) && 1 == 2'
-const condition = '(0 == 0) || ((1) != 0) && 1 == 2'
+const condition = '(0 == 0) && ((1) != 0) && 1 == 2'
+// const condition = '(0<=0)&&1'
 
 const specialSymbols = '!=><~&|'
 
-const priorityList = {
-  '==': 0,
-  '!=': 0,
-  '>': 0,
-  '<': 0,
-  '<=': 0,
-  '>=': 0,
-  '~': 0,
-  '&&': 1,
-  '||': 2,
+const getPriority = x => {
+  if(x == '==') return 1
+  if(x == '!=') return 1
+  if(x == '>' ) return 1
+  if(x == '<' ) return 1
+  if(x == '>=') return 1
+  if(x == '<=') return 1
+  if(x == '~' ) return 1
+  if(x == '&&') return 2
+  if(x == '||') return 3
+  return -1
 }
 
 const resolve = (operator, lOperand, rOperand) => {
-  // console.log("RESOLVE: ", operator, '.', lOperand, '.', rOperand)
+  console.log("RESOLVE: ", operator, '.', lOperand, '.', rOperand)
   if(operator == '&&') return +lOperand && +rOperand ? 1 : 0
   if(operator == '||') return +lOperand || +rOperand ? 1 : 0
   if(operator == '==') return +lOperand == +rOperand ? 1 : 0
   if(operator == '!=') return +lOperand != +rOperand ? 1 : 0
+  if(operator == '<=') return +lOperand <= +rOperand ? 1 : 0
+  if(operator == '>=') return +lOperand >= +rOperand ? 1 : 0
+  if(operator == '<')  return +lOperand  < +rOperand ? 1 : 0
+  if(operator == '>')  return +lOperand  > +rOperand ? 1 : 0
   return 0
 }
 
-let cntr =0
-const bool = query => {
-  // console.log('BOOL: ', query)
 
-  let cmds = [[], [], []]
+const bool = query => {
+  console.log('BOOL: ', query)
 
   let hasSpecialSymbols = false
+  let cmdPriority = Infinity
+  let cmd = []
+  let allCmds = []
+
+  let curCmd = ''
+  let curCmdStart = 0
 
   for(let i=0; i<query.length; i++) {
-    if(query[i] == '=' && query[i+1] == '=') { cmds[priorityList['==']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '!' && query[i+1] == '=') { cmds[priorityList['!=']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '&' && query[i+1] == '&') { cmds[priorityList['&&']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '|' && query[i+1] == '|') { cmds[priorityList['||']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '>' && query[i+1] == '=') { cmds[priorityList['>=']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '<' && query[i+1] == '=') { cmds[priorityList['<=']].push([i, i+1]); hasSpecialSymbols = true; i++}
-    if(query[i] == '<') { cmds[priorityList['<']].push([i, i]); hasSpecialSymbols = true }
-    if(query[i] == '>') { cmds[priorityList['>']].push([i, i]); hasSpecialSymbols = true }
-    if(query[i] == '~') { cmds[priorityList['~']].push([i, i]); hasSpecialSymbols = true }
+    if(specialSymbols.indexOf(query[i]) > -1) {
+      curCmd += query[i]
+      hasSpecialSymbols = true
+    }
+    else {
+      if(curCmd != '') {
+        let priority = getPriority(curCmd)
+
+        if(priority == -1) {console.log('SYNTAX at ', curCmd)}
+
+        if(priority < cmdPriority) {
+          cmdPriority = priority
+          cmd = [curCmdStart, i-1]
+        }
+        allCmds.push(cmd)
+      }
+      curCmd = ''
+      curCmdStart = i+1
+    }
   }
 
   if(hasSpecialSymbols) {
-    for(let i=0; i<cmds.length; i++) {
-      for(let j=0; j<cmds[i].length; j++) {
-        let lastOperator = [-1, -1]
-        let nextOperator = [query.length, query.length]
-        for(let k=cmds[i][j][0]-1; k>0; k--) {
-          if(specialSymbols.indexOf(query[k]) > -1) {
-            lastOperator = [k, k]
-            if(specialSymbols.indexOf(query[k-1]) > -1) {
-              lastOperator = [k-1, k]
-            }
-            break
-          }
-        }
-        for(let k=cmds[i][j][1]+1; k<query.length+1; k++) {
-          if(specialSymbols.indexOf(query[k]) > -1) {
-            nextOperator = [k,k]
-            if(specialSymbols.indexOf(query[k+1]) > -1) {
-              nextOperator = [k, k+1]
-            }
-            break
-          }
-        }
-        const lOperand = query.slice(lastOperator[1]+1, cmds[i][j][0])
-        const operator = query.slice(cmds[i][j][0], cmds[i][j][1]+1)
-        const rOperand = query.slice(cmds[i][j][1]+1, nextOperator[0])
+    let lastOperatorEnd = -1
+    let nextOperatorStart = query.length
 
-        // console.log("TOP PRIORITY: ", lOperand + operator + rOperand)
-        const cmdBefore = query.slice(0, lastOperator[1]+1)
-        const cmdAfter = query.slice(nextOperator[0], query.length)
-
-        // console.log("EXECING: ", `${cmdBefore}.${resolve(operator, lOperand, rOperand)}.${cmdAfter}`)
-        return bool(`${cmdBefore}${resolve(operator, lOperand, rOperand)}${cmdAfter}`)
-      }
+    for(let i=0; i<allCmds.length; i++) {
+      if(allCmds[i][0] == cmd[0] && allCmds[i][1] == cmd[1]) continue
+      if(allCmds[i][1] > lastOperatorEnd) lastOperatorEnd = allCmds[i][1]
+      if(allCmds[i][0] > nextOperatorStart) nextOperatorStart = allCmds[i][0]
     }
-  } else {
+
+    // console.log("LAST: ", lastOperatorEnd)
+    // console.log("NEXT: ", nextOperatorStart)
+
+    const lOperand = query.slice(lastOperatorEnd+1, cmd[0])
+    const operator = query.slice(cmd[0], cmd[1]+1)
+    const rOperand = query.slice(cmd[1]+1, nextOperatorStart)
+
+    // console.log("TOP PRIORITY: ", lOperand + '.' + operator + '.' + rOperand)
+    const cmdBefore = query.slice(0, lastOperatorEnd+1)
+    const cmdAfter = query.slice(nextOperatorStart, query.length)
+
+    console.log("EXECING: ", `${cmdBefore}.resolve(${operator}, ${lOperand}, ${rOperand}).${cmdAfter}`)
+    return bool(`${cmdBefore}${resolve(operator, lOperand, rOperand)}${cmdAfter}`)
+  }
+  else {
     return query
   }
 }
 
 const parser = q => {
-  let parenthesis = []
-
   let openParenthesis = []
-
 
   const query = q.replace(/\s/g, '')
   console.log('QUERY: ', query)
@@ -128,10 +133,11 @@ const parser = q => {
   }
   else {
     // Linear query here
-    console.log("FINAL: ", bool(query))
+    // console.log("FINAL: ", bool(query))
+    return bool(query)
   }
 
-  return '1'
+  return 'wait what?'
 }
 
-parser(condition)
+console.log("FINAL: ", parser(condition))

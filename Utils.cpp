@@ -16,6 +16,12 @@ string Utils::trim(const string& str) {
   return str.substr(first, (last - first + 1));
 }
 
+string Utils::replaceChar(string str, char from, char to) {
+  for(string::iterator it = str.begin(); it != str.end(); it++)
+    if(*it == from) *it = to;
+  return str;
+}
+
 bool Utils::isNumber(const string& s) {
   string::const_iterator it = s.begin();
   while (it != s.end() && isdigit(*it)) ++it;
@@ -24,6 +30,14 @@ bool Utils::isNumber(const string& s) {
 
 bool Utils::contains(string str, string substr) {
   return str.find(substr) != string::npos;
+}
+
+bool Utils::contains(string str, char ch) {
+  return str.find(ch) != string::npos;
+}
+
+string Utils::slice(string str, int start, int end) {
+  return str.substr(start, end-start);
 }
 
 int Utils::strToInt(string str) {
