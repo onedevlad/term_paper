@@ -7,7 +7,6 @@
 //     ||, OR
 
 const condition = '(0 == 0) && ((1) != 0) && 1 == 2'
-// const condition = '(0<=0)&&1'
 
 const specialSymbols = '!=><~&|'
 
@@ -136,8 +135,6 @@ const parser = q => {
     // console.log("FINAL: ", bool(query))
     return bool(query)
   }
-
-  return 'wait what?'
 }
 
 console.log("FINAL: ", parser(condition))

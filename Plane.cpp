@@ -19,7 +19,7 @@ vector<vector<string>> Plane::serialize() {
   vector<vector<string>> result;
   result.push_back(Table::TPlanes.headers);
 
-  for(int i=0; i<planes.size(); i++) serializeLn(planes[i]);
+  for(int i=0; i<planes.size(); i++) result.push_back(serializeLn(planes[i]));
 
   return result;
 }

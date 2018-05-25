@@ -30,9 +30,14 @@ void Cmd::complexHandler(string cmd) {
 }
 
 void Cmd::handler(string cmd) {
+  cout << endl;
+
   string command = Utils::trim(cmd);
+  if(command.length() == 0) return;
   if(command.find(" ") == string::npos) simpleHandler(command);
   else complexHandler(command);
+
+  cout << endl;
 }
 
 void Cmd::show(string tableName) {
@@ -79,6 +84,13 @@ void Cmd::add(string fieldName) {
   factory(size + 1, data, true);
 }
 
+string Cmd::getWhereClause() {
+  cout << "...> where ";
+  string query;
+  getline(cin, query);
+  return query;
+}
+
 void Cmd::find(string tableName) {
   vector<string> headers;
 
@@ -87,22 +99,18 @@ void Cmd::find(string tableName) {
   else if(tableName == "planes") headers = Table::TPlanes.headers;
   else { invalid(); return; }
 
-  cout << "  " << "Which field would you like to search by?" << endl;
+  cout << "  " << "List of field substitutions:" << endl;
 
-  for(int i=0; i<headers.size(); i++) {
-    cout << "    " << i << ") " << headers[i] << endl;
-  }
+  for(int i=0; i<headers.size(); i++) cout << "    $" << i << ": " << headers[i] << endl;
+
   cout << endl;
 
-  int headerIndex = Utils::askForInt("index", 0, headers.size()-1);
-  string searchQuery = Utils::askForStr("search query for " + headers[headerIndex]);
-
+  string expression = getWhereClause();
   vector<vector<string>> searchResults;
+  vector<vector<string>> table;
 
   if(tableName == "flights") {
-    searchResults = Flight::find(headerIndex, searchQuery);
-    // cout << searchResults.size() << endl;
-    vector<vector<string>> table;
+    searchResults = Flight::find(expression);
     table.push_back(Table::TFlights.headers);
     table.insert(table.end(), searchResults.begin(), searchResults.end());
     Table::TFlights.renderTable(table);
@@ -117,9 +125,14 @@ void Cmd::tables() {
 }
 
 void Cmd::help() {
-
-  // Find ...
-  // cout << "find - " << endl;
+  cout << "find T - find fields in table T." << endl;
+  cout << "... where E - where clause for previous command (`find`, `update` etc)." << endl;
+    cout << "  " << "Supported operators:" << endl;
+    cout << '\t' << "priority [()];" << endl;
+    cout << '\t' << "interolation [$N]." << endl;
+    cout << '\t' << "comparison [<, <=, >, >=, ==, !=, ~];" << endl;
+    cout << '\t' << "boolean [&&, ||];" << endl;
+    cout << '\t' << "Sample query: ($0 <= 200 && $1 != AB1234) || $2 == 100" << endl;
   cout << "tables - show all existing tables" << endl;
   cout << "show T - show table T." << endl;
   cout << "add I - add instance of table T." << endl;

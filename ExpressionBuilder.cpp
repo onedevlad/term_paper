@@ -9,24 +9,35 @@ using namespace std;
 
 string ExpressionBuilder::specialSymbols = "!=><~&|";
 
-template <typename T> bool polymorphicOperators(string opp, T const& lOperand, T const& rOperand) {
-  if(opp == "&&") return *lOperand && *rOperand;
-  if(opp == "||") return *lOperand || *rOperand;
-  if(opp == "==") return *lOperand == *rOperand;
-  if(opp == "!=") return *lOperand != *rOperand;
-}
-
-bool ExpressionBuilder::executor(string opp, string lOperand, string rOperand) {
-  return polymorphicOperators(opp, lOperand.c_str(), rOperand.c_str());
-}
-
-bool ExpressionBuilder::executor(string opp, int lOperand, int rOperand) {
+template <typename T> int polymorphicOperators(string opp, T const lOperand, T const rOperand) {
+  if(opp == "==") return lOperand == rOperand;
+  if(opp == "!=") return lOperand != rOperand;
   if(opp == "<=") return lOperand <= rOperand;
   if(opp == ">=") return lOperand >= rOperand;
   if(opp == "<" ) return lOperand  < rOperand;
   if(opp == ">" ) return lOperand  > rOperand;
 
-  return polymorphicOperators(opp, &lOperand, &rOperand);
+  cout << "Warning: Syntax error near: " << opp << '.' << endl;
+
+  return -1;
+}
+
+int ExpressionBuilder::executor(string opp, string lOperand, string rOperand) {
+  int lSize = lOperand.size();
+  int rSize = rOperand.size();
+
+  if(opp == "&&") return lSize && rSize;
+  if(opp == "||") return lSize || rSize;
+  if(opp == "~") return Utils::contains(lOperand, rOperand);
+
+  return polymorphicOperators(opp, lOperand, rOperand);
+}
+
+int ExpressionBuilder::executor(string opp, int lOperand, int rOperand) {
+  if(opp == "&&") return lOperand && rOperand;
+  if(opp == "||") return lOperand || rOperand;
+
+  return polymorphicOperators(opp, lOperand, rOperand);
 }
 
 
@@ -46,7 +57,9 @@ int ExpressionBuilder::getOperatorPriority(string x) {
 }
 
 
-bool ExpressionBuilder::typeResolver(string opp, string lOperand, string rOperand) {
+int ExpressionBuilder::typeResolver(string opp, string lOperand, string rOperand) {
+  // cout << "TYPE: " << lOperand << opp << rOperand << endl;
+  // cout << "Returning: " <<  executor(opp, lOperand, rOperand) << endl;
   int lInt = Utils::strToInt(lOperand);
   int rInt = Utils::strToInt(rOperand);
 
@@ -54,17 +67,11 @@ bool ExpressionBuilder::typeResolver(string opp, string lOperand, string rOperan
   bool isRightInt = rInt != -1;
 
   if(isLeftInt && isRightInt) return executor(opp, lInt, rInt);
-  if(!isLeftInt && !isRightInt) return executor(opp, lOperand, rOperand);
-
-  cout << "Warning: value `";
-  if(isLeftInt) cout << rOperand;
-  else cout << lOperand;
-  cout << "` is not of numeric type. Ommiting..." << endl;
-
-  return 0;
+  return executor(opp, lOperand, rOperand);
 }
 
-bool ExpressionBuilder::interpolationResolver(string opp, string _lOperand, string _rOperand) {
+int ExpressionBuilder::interpolationResolver(string opp, string _lOperand, string _rOperand) {
+  // cout << "INTERPOLATION: " << _lOperand << opp << _rOperand << endl;
   string lOperand = _lOperand;
   string rOperand = _rOperand;
   int lInt = Utils::strToInt(_lOperand.substr(1, _lOperand.length()-1));
@@ -82,9 +89,8 @@ bool ExpressionBuilder::interpolationResolver(string opp, string _lOperand, stri
   return typeResolver(opp, lOperand, rOperand);
 }
 
-bool ExpressionBuilder::priorityResolver(string query) {
-  // cout << "BOOL: " << query << endl;
-
+int ExpressionBuilder::priorityResolver(string query) {
+  // cout << "PRIORITY: " << query << endl;
   int queryEnd = query.length();
   bool hasSpecialSymbols = false;
   int urgentOperatorPriority = 100;
@@ -150,13 +156,17 @@ bool ExpressionBuilder::priorityResolver(string query) {
     string cmdBefore = Utils::slice(query, 0, prevOperatorEnd+1);
     string cmdAfter = Utils::slice(query, nextOperatorStart, queryEnd);
 
-    // cout << "EXECING: priorityResolver("<< cmdBefore << " + interpolationResolver(" << opp << ", " << lOperand << ", " << rOperand <<") + " << cmdAfter << ")" << endl;
-
     return priorityResolver(cmdBefore + to_string(interpolationResolver(opp, lOperand, rOperand)) + cmdAfter);
-  } else return stoi(query); //FIXME maybe.
+  } else {
+    // cout << "LITERAL: " << stoi(query) << endl;
+    int queryInt = Utils::strToInt(query);
+    if(queryInt < 1) return 0;
+    else return queryInt;
+    // return stoi(query);
+  }
 }
 
-bool ExpressionBuilder::parenthesisResolver(string query) {
+int ExpressionBuilder::parenthesisResolver(string query) {
   // cout << "QUERY: " << query << endl;
 
   int queryEnd = query.length();
@@ -201,7 +211,10 @@ bool ExpressionBuilder::parse(string str) {
   for(int i=0; i<str.length(); i++)
     if(str[i] != ' ') query.push_back(str[i]);
 
-  return parenthesisResolver(query);
+  // -1 - An error occured
+  //  0 - False
+  //  1 - True
+  return parenthesisResolver(query) > 0;
 }
 
 ExpressionBuilder::ExpressionBuilder(vector<string> _substitutions) {

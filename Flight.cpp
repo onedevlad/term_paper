@@ -5,6 +5,7 @@
 #include "Flight.h"
 #include "Table.h"
 #include "Utils.h"
+#include "ExpressionBuilder.h"
 
 using namespace std;
 
@@ -37,21 +38,14 @@ vector<string> Flight::serializeLn(Flight obj) {
   return record;
 }
 
-vector<vector<string>> Flight::find(int headerIndex, string searchQuery) {
+vector<vector<string>> Flight::find(string searchQuery) {
   vector<vector<string>> result;
-  string containedData;
-  for(int i=0; i<flights.size(); i++) {
-    switch(headerIndex) {
-      case 0: containedData = flights[i].flightID; break;
-      case 1: containedData = flights[i].passangersCount; break;
-      case 2: containedData = flights[i].departureDate; break;
-      case 3: containedData = flights[i].departureTime; break;
-      case 4: containedData = flights[i].arrivalDate; break;
-      case 5: containedData = flights[i].arrivalTime; break;
-      case 6: containedData = flights[i].planeID; break;
-    }
 
-    if(Utils::contains(containedData, searchQuery)) result.push_back(serializeLn(flights[i]));
+  for(int i=0; i<flights.size(); i++) {
+    vector<string> line = serializeLn(flights[i]);
+    ExpressionBuilder expression = ExpressionBuilder(line);
+    bool lineMatches = expression.parse(searchQuery);
+    if(lineMatches) result.push_back(line);
   }
 
   return result;

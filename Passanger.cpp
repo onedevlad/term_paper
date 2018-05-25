@@ -19,18 +19,19 @@ vector<vector<string>> Passanger::serialize() {
   vector<vector<string>> result;
   result.push_back(Table::TPassangers.headers);
 
-  for(int i=0; i<passangers.size(); i++) {
-    vector<string> record;
-    record.push_back(passangers[i].passangerID);
-    record.push_back(passangers[i].lastName);
-    record.push_back(passangers[i].firstName);
-    record.push_back(passangers[i].flightID);
-
-    result.push_back(record);
-  }
+  for(int i=0; i<passangers.size(); i++) result.push_back(serializeLn(passangers[i]));
 
   return result;
+}
 
+vector<string> Passanger::serializeLn(Passanger obj) {
+  vector<string> result;
+  result.push_back(obj.passangerID);
+  result.push_back(obj.lastName);
+  result.push_back(obj.firstName);
+  result.push_back(obj.flightID);
+
+  return result;
 }
 
 void Passanger::factory(int _entryLine, vector<string> rawData, bool fsSync) {

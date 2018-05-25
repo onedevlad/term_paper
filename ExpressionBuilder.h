@@ -10,14 +10,14 @@ class ExpressionBuilder {
     std::vector<std::string> substitutions;
     int getOperatorPriority(std::string);
 
-    bool executor(std::string, std::string, std::string);
-    bool executor(std::string, int, int);
+    int executor(std::string, std::string, std::string);
+    int executor(std::string, int, int);
 
-    bool typeResolver(std::string, std::string, std::string);
-    bool priorityResolver(std::string);
-    bool parenthesisResolver(std::string);
+    int typeResolver(std::string, std::string, std::string);
+    int interpolationResolver(std::string, std::string, std::string);
+    int priorityResolver(std::string);
+    int parenthesisResolver(std::string);
   public:
-    bool interpolationResolver(std::string, std::string, std::string);
     bool parse(std::string);
     ExpressionBuilder(std::vector<std::string>);
 };
