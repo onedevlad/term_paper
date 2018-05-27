@@ -34,16 +34,14 @@ vector<string> Passanger::serializeLn(Passanger obj) {
   return result;
 }
 
-void Passanger::factory(int _entryLine, vector<string> rawData, bool fsSync) {
-  Passanger obj(_entryLine, rawData);
+void Passanger::factory(vector<string> rawData, bool fsSync) {
+  Passanger obj(rawData);
   Passanger::passangers.push_back(obj);
 
   if(fsSync) Table::TPassangers.writeFile(serialize());
 }
 
-Passanger::Passanger(int _entryLine, vector<string> rawData) {
-  entryLine = _entryLine;
-
+Passanger::Passanger(vector<string> rawData) {
   passangerID = rawData[0];
   lastName = rawData[1];
   firstName = rawData[2];

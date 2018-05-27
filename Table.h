@@ -19,7 +19,7 @@ public:
   static Table TPlanes;
   std::vector<std::string> readFile();
   void writeFile(std::vector<std::vector<std::string>>);
-  void parse(std::vector<std::string>, void (*)(int, std::vector<std::string>, bool));
+  void parse(std::vector<std::string>, void (*)(std::vector<std::string>, bool));
   void render();
   Table(std::string, std::vector<std::vector<std::string>>(*)());
 };

@@ -32,7 +32,7 @@ void Table::writeFile(vector<vector<string>> data) {
   table.close();
 }
 
-void Table::parse(vector<string> file, void (*factoryCB)(int, vector<string>, bool)) {
+void Table::parse(vector<string> file, void (*factoryCB)(vector<string>, bool)) {
   for(int i=0; i<file.size(); i++) {
     vector<string> items;
     string item;
@@ -42,7 +42,7 @@ void Table::parse(vector<string> file, void (*factoryCB)(int, vector<string>, bo
     while(getline(iss, item, '\t')) items.push_back(item);
 
     if(!i) headers = items;
-    else factoryCB(i, items, false);
+    else factoryCB(items, false);
   }
 }
 

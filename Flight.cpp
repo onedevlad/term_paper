@@ -38,33 +38,74 @@ vector<string> Flight::serializeLn(Flight obj) {
   return record;
 }
 
-vector<vector<string>> Flight::find(string searchQuery) {
-  vector<vector<string>> result;
+vector<Flight*> Flight::getMatchingFlights(string query) {
+  vector<Flight*> result;
 
   for(int i=0; i<flights.size(); i++) {
     vector<string> line = serializeLn(flights[i]);
     ExpressionBuilder expression = ExpressionBuilder(line);
-    bool lineMatches = expression.parse(searchQuery);
-    if(lineMatches) result.push_back(line);
+    bool lineMatches = expression.parse(query);
+    if(lineMatches) result.push_back(&flights[i]);
   }
 
   return result;
 }
 
-void Flight::factory(int _entryLine, vector<string> rawData, bool fsSync) {
-  Flight obj(_entryLine, rawData);
-  flights.push_back(obj);
-  if(fsSync) Table::TFlights.writeFile(serialize());
+
+vector<vector<string>> Flight::find(string query) {
+  vector<vector<string>> result;
+  vector<Flight*> matchingFlights = getMatchingFlights(query);
+
+  for(int i=0; i<matchingFlights.size(); i++)
+    result.push_back(serializeLn(*matchingFlights[i]));
+
+   return result;
 }
 
-Flight::Flight(int _entryLine, vector<string> rawData) {
-  entryLine = _entryLine;
 
-  flightID = rawData[0];
-  passangersCount = rawData[1];
-  departureDate = rawData[2];
-  departureTime = rawData[3];
-  arrivalDate = rawData[4];
-  arrivalTime = rawData[5];
-  planeID = rawData[6];
+vector<vector<string>> Flight::update(string query, vector<string> fields) {
+  vector<vector<string>> result;
+  vector<Flight*> matchingFlights = getMatchingFlights(query);
+
+  for(int i=0; i<matchingFlights.size(); i++) {
+    matchingFlights[i]->setFields(fields);
+    result.push_back(serializeLn(*matchingFlights[i]));
+  }
+
+  updateFS();
+
+  return result;
+}
+
+void Flight::remove(string query) {
+  vector<Flight*> matchingFlights = getMatchingFlights(query);
+
+  for(int i=0; i<matchingFlights.size(); i++) delete matchingFlights[i];
+
+  updateFS();
+}
+
+void Flight::updateFS() {
+  Table::TFlights.writeFile(serialize());
+}
+
+void Flight::factory(vector<string> rawData, bool fsSync) {
+  Flight obj(rawData);
+  flights.push_back(obj);
+  if(fsSync) updateFS();
+}
+
+void Flight::setFields (vector<string> rawData) {
+  if(rawData[0].length()) flightID = rawData[0];
+  if(rawData[1].length()) passangersCount = rawData[1];
+  if(rawData[2].length()) departureDate = rawData[2];
+  if(rawData[3].length()) departureTime = rawData[3];
+  if(rawData[4].length()) arrivalDate = rawData[4];
+  if(rawData[5].length()) arrivalTime = rawData[5];
+  if(rawData[6].length()) planeID = rawData[6];
+}
+
+
+Flight::Flight(vector<string> rawData) {
+  setFields(rawData);
 }

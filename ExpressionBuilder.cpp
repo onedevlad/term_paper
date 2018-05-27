@@ -28,7 +28,7 @@ int ExpressionBuilder::executor(string opp, string lOperand, string rOperand) {
 
   if(opp == "&&") return lSize && rSize;
   if(opp == "||") return lSize || rSize;
-  if(opp == "~") return Utils::contains(lOperand, rOperand);
+  if(opp == "~" ) return Utils::contains(lOperand, rOperand);
 
   return polymorphicOperators(opp, lOperand, rOperand);
 }

@@ -17,25 +17,11 @@ Table Table::TPassangers = Table("Passangers", Passanger::serialize);
 Table Table::TPlanes = Table("Planes", Plane::serialize);
 
 int main() {
-  cout << endl;
-
   Flight::load();
   Passanger::load();
   Plane::load();
 
-  // vector<string> substitutions;
-  // substitutions.push_back("BC9292929");
-  // substitutions.push_back("Vlad");
-  // substitutions.push_back("Trishch");
-  // substitutions.push_back("SKT9903");
-//
-  // ExpressionBuilder expression = ExpressionBuilder(substitutions);
-//
-  // bool result = expression.parse("javascript ~ avasc");
-  // cout << "Final: " << result << endl;
-
-
-  cout << "Type `help` for help." << endl << endl;
+  cout << endl << "Type `help` for help." << endl << endl;
 
   while(true) {
     cout << "$> ";

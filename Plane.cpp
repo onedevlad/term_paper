@@ -12,7 +12,7 @@ using namespace std;
 vector<Plane> Plane::planes = {};
 
 void Plane::load() {
-  Table::TPlanes.parse(Table::TPlanes.readFile(), Plane::factory);
+  Table::TPlanes.parse(Table::TPlanes.readFile(), factory);
 }
 
 vector<vector<string>> Plane::serialize() {
@@ -32,15 +32,13 @@ vector<string> Plane::serializeLn(Plane obj) {
   return result;
 }
 
-void Plane::factory(int _entryLine, vector<string> rawData, bool fsSync) {
-  Plane obj(_entryLine, rawData);
+void Plane::factory(vector<string> rawData, bool fsSync) {
+  Plane obj(rawData);
   planes.push_back(obj);
   if(fsSync) Table::TPlanes.writeFile(serialize());
 }
 
-Plane::Plane(int _entryLine, vector<string> rawData) {
-  entryLine = _entryLine;
-
+Plane::Plane(vector<string> rawData) {
   planeID = rawData[0];
   maxPassangersCount = rawData[1];
 }

@@ -5,20 +5,19 @@
 #define PASSANGER_H
 
 class Passanger {
-  public:
+  private:
     static std::vector<Passanger> passangers;
-    int entryLine;
-
     std::string passangerID;
     std::string lastName;
     std::string firstName;
     std::string flightID;
 
+  public:
     static std::vector<std::vector<std::string>> serialize();
     static std::vector<std::string> serializeLn(Passanger);
-    static void factory(int, std::vector<std::string>, bool);
+    static void factory(std::vector<std::string>, bool);
     static void load();
-    Passanger(int, std::vector<std::string>);
+    Passanger(std::vector<std::string>);
 };
 
 #endif
