@@ -1,19 +1,24 @@
-#include <string>
-#include <vector>
-
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <string>
+#include <vector>
+
+using namespace std;
+
 class Renderer {
   private:
+    vector<vector<string>> table;
     int colsCount=0;
     int maxColWidth=0;
     int tableWidth=0;
-    std::string padCenter(int, const std::string&);
-    std::string getRowSeparator(bool);
-    void analyseTable(std::vector<std::vector<std::string>>);
+    string padCenter(int, const string&);
+    string getRowSeparator(bool);
+    void analyse();
   public:
-    void renderTable(std::vector<std::vector<std::string>>);
+    void render();
+    Renderer(vector<vector<string>>);
+    Renderer(vector<string>, vector<vector<string>>);
 };
 
 #endif

@@ -4,25 +4,27 @@
 #ifndef CMD_H
 #define CMD_H
 
+using namespace std;
+
 class Cmd {
   private:
-
-    static std::vector<std::string> getHeadersByTableName(std::string);
-    static std::vector<std::string> getReplacements(std::vector<std::string>);
-    static void printSubstitutions(std::vector<std::string>);
+    vector<string> getHeadersByTableName(string);
+    vector<string> getReplacements(vector<string>);
+    string getWhereClause(vector<string>);
+    void simpleHandler(string);
+    void complexHandler(string);
+    void show(string);
+    void add(string);
+    void update(string);
+    void remove(string);
+    void tables();
+    void find(string);
+    void help();
+    void invalidMsg();
+    void noTableMsg(string);
+    void enoentMsg();
   public:
-    static void simpleHandler(std::string);
-    static void complexHandler(std::string);
-    static void handler(std::string);
-    static void show(std::string);
-    static void add(std::string);
-    static void update(std::string);
-    static void remove(std::string);
-    static void tables();
-    static std::string getWhereClause();
-    static void find(std::string);
-    static void help();
-    static void invalid();
+    Cmd(string);
 };
 
 #endif

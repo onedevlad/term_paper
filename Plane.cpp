@@ -8,16 +8,9 @@
 
 using namespace std;
 
-// Static vectors need to be initialized
-vector<Plane> Plane::planes = {};
-
-void Plane::load() {
-  Table::TPlanes.parse(Table::TPlanes.readFile(), factory);
-}
-
 vector<vector<string>> Plane::serialize() {
   vector<vector<string>> result;
-  result.push_back(Table::TPlanes.headers);
+  result.push_back(Table::TPlanes.getHeaders());
 
   for(int i=0; i<planes.size(); i++) result.push_back(serializeLn(planes[i]));
 

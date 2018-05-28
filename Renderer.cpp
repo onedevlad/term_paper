@@ -6,6 +6,7 @@
 
 using namespace std;
 
+vector<vector<string>> table = {};
 
 string Renderer::padCenter(int width, const string& str) {
   int len = str.length();
@@ -17,7 +18,7 @@ string Renderer::padCenter(int width, const string& str) {
   return string(padL, ' ') + str + string(padR, ' ');
 }
 
-void Renderer::analyseTable(vector<vector<string>> table) {
+void Renderer::analyse() {
   maxColWidth = table[0][0].length();
   colsCount = table[0].size();
 
@@ -38,9 +39,7 @@ string Renderer::getRowSeparator(bool outermostRow) {
   return cornerChar + string(tableWidth - 2, '-') + cornerChar;
 }
 
-void Renderer::renderTable(vector<vector<string>> table) {
-  analyseTable(table);
-
+void Renderer::render() {
   cout << getRowSeparator(true);
   cout << endl;
 
@@ -56,4 +55,18 @@ void Renderer::renderTable(vector<vector<string>> table) {
     cout << getRowSeparator(lastRow);
     cout << endl;
   }
+}
+
+Renderer::Renderer(vector<vector<string>> _table) {
+  table = _table;
+  analyse();
+}
+
+Renderer::Renderer(vector<string> headers, vector<vector<string>> data) {
+  vector<vector<string>> _table;
+  _table.push_back(headers);
+  _table.insert(_table.end(), data.begin(), data.end());
+
+  table = _table;
+  analyse();
 }

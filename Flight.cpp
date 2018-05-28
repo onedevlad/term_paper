@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -9,16 +8,10 @@
 
 using namespace std;
 
-// Static vectors need to be initialized
-vector<Flight> Flight::flights = {};
-
-void Flight::load() {
-  Table::TFlights.parse(Table::TFlights.readFile(), Flight::factory);
-}
 
 vector<vector<string>> Flight::serialize() {
   vector<vector<string>> result;
-  result.push_back(Table::TFlights.headers);
+  result.push_back(Table::TFlights.getHeaders());
 
   for(int i=0; i<flights.size(); i++)
     result.push_back(serializeLn(flights[i]));
@@ -58,7 +51,6 @@ vector<vector<string>> Flight::find(string query) {
 
   for(int i=0; i<matchingFlights.size(); i++)
     result.push_back(serializeLn(*matchingFlights[i]));
-
    return result;
 }
 
@@ -78,9 +70,11 @@ vector<vector<string>> Flight::update(string query, vector<string> fields) {
 }
 
 void Flight::remove(string query) {
-  vector<Flight*> matchingFlights = getMatchingFlights(query);
-
-  for(int i=0; i<matchingFlights.size(); i++) delete matchingFlights[i];
+  for(int i=0; i<flights.size(); i++) {
+    ExpressionBuilder expression = ExpressionBuilder(serializeLn(flights[i]));
+    bool lineMatches = expression.parse(query);
+    if(lineMatches) flights.erase(flights.begin() + i);
+  }
 
   updateFS();
 }
@@ -104,7 +98,6 @@ void Flight::setFields (vector<string> rawData) {
   if(rawData[5].length()) arrivalTime = rawData[5];
   if(rawData[6].length()) planeID = rawData[6];
 }
-
 
 Flight::Flight(vector<string> rawData) {
   setFields(rawData);

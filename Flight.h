@@ -4,29 +4,34 @@
 #ifndef FLIGHT_H
 #define FLIGHT_H
 
+using namespace std;
+
+#include "Table.h"
+
 
 class Flight {
   private:
-    static std::vector<Flight> flights;
-    std::string flightID;
-    std::string passangersCount;
-    std::string departureDate;
-    std::string departureTime;
-    std::string arrivalDate;
-    std::string arrivalTime;
-    std::string planeID;
-    void setFields(std::vector<std::string>);
+    static vector<Flight> flights;
+    string flightID;
+    string passangersCount;
+    string departureDate;
+    string departureTime;
+    string arrivalDate;
+    string arrivalTime;
+    string planeID;
+    void setFields(vector<string>);
     static void updateFS();
-    static std::vector<Flight*> getMatchingFlights(std::string query);
+    static vector<Flight*> getMatchingFlights(string);
+    static vector<string> serializeLn(Flight);
+
   public:
-    static void load();
-    static std::vector<std::vector<std::string>> find(std::string);
-    static std::vector<std::vector<std::string>> update(std::string, std::vector<std::string>);
-    static void remove(std::string);
-    static std::vector<std::vector<std::string>> serialize();
-    static std::vector<std::string> serializeLn(Flight);
-    static void factory(std::vector<std::string>, bool);
-    Flight(std::vector<std::string>);
+    static vector<vector<string>> serialize();
+    static vector<vector<string>> find(string);
+    static vector<vector<string>> update(string, vector<string>);
+    static void remove(string);
+    static void factory(vector<string>, bool);
+    Flight(vector<string>);
 };
+
 
 #endif

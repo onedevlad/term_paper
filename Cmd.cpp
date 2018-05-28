@@ -4,6 +4,7 @@
 
 #include "Cmd.h"
 #include "Table.h"
+#include "Renderer.h"
 #include "Utils.h"
 #include "Flight.h"
 #include "Passanger.h"
@@ -11,7 +12,7 @@
 
 using namespace std;
 
-void Cmd::invalid() {
+void Cmd::invalidMsg() {
   cout << "Invalid query." << endl;
 }
 
@@ -19,7 +20,7 @@ void Cmd::invalid() {
 void Cmd::simpleHandler(string cmd) {
   if(cmd == "help") help();
   else if(cmd == "tables") tables();
-  else invalid();
+  else invalidMsg();
 }
 
 void Cmd::complexHandler(string cmd) {
@@ -33,10 +34,10 @@ void Cmd::complexHandler(string cmd) {
   else if(operands[0] == "find") find(operands[1]);
   else if(operands[0] == "update") update(operands[1]);
   else if(operands[0] == "remove") remove(operands[1]);
-  else invalid();
+  else invalidMsg();
 }
 
-void Cmd::handler(string cmd) {
+Cmd::Cmd(string cmd) {
   cout << endl;
 
   string command = Utils::trim(cmd);
@@ -47,11 +48,19 @@ void Cmd::handler(string cmd) {
   cout << endl;
 }
 
+void Cmd::noTableMsg(string tableName) {
+  cout << "Table `" << tableName << "` doesn't exist." << endl;
+}
+
+void Cmd::enoentMsg() {
+  cout << "No results found." << endl;
+}
+
 void Cmd::show(string tableName) {
   if(tableName == "flights") Table::TFlights.render();
   else if(tableName == "passangers") Table::TPassangers.render();
   else if(tableName == "planes") Table::TPlanes.render();
-  else cout << "Table `" << tableName << "` doesn't exist." << endl;
+  else noTableMsg(tableName);
 }
 
 typedef void (*Factory)(vector<string>, bool);
@@ -61,15 +70,15 @@ void Cmd::add(string fieldName) {
   Factory factory;
 
   if(fieldName == "flight") {
-    headers = Table::TFlights.headers;
+    headers = Table::TFlights.getHeaders();
     factory = Flight::factory;
   }
   else if(fieldName == "passanger") {
-    headers = Table::TPassangers.headers;
+    headers = Table::TPassangers.getHeaders();
     factory = Passanger::factory;
   }
   else if(fieldName == "plane") {
-    headers = Table::TPlanes.headers;
+    headers = Table::TPlanes.getHeaders();
     factory = Plane::factory;
   }
   else {
@@ -87,8 +96,13 @@ void Cmd::add(string fieldName) {
   factory(data, true);
 }
 
-string Cmd::getWhereClause() {
-  cout << "...> where ";
+string Cmd::getWhereClause(vector<string> headers) {
+  cout << "  " << "Use short-hand aliases inside your query instead of full fields' names:" << endl;
+
+  for(int i=0; i<headers.size(); i++)
+    cout << "    $" << i << ": " << headers[i] << endl;
+  cout << endl << "...> where ";
+
   string query;
   getline(cin, query);
   return query;
@@ -109,70 +123,75 @@ vector<string> Cmd::getReplacements(vector<string> headers) {
   return replacements;
 }
 
-void Cmd::printSubstitutions (vector<string> substitutions) {
-  cout << "  " << "List of field substitutions:" << endl;
-  for(int i=0; i<substitutions.size(); i++)
-    cout << "    $" << i << ": " << substitutions[i] << endl;
-  cout << endl;
-}
-
 vector<string> Cmd::getHeadersByTableName(string tableName) {
   vector<string> headers;
 
-  if(tableName == "flights") headers = Table::TFlights.headers;
-  else if(tableName == "passangers") headers = Table::TPassangers.headers;
-  else if(tableName == "planes") headers = Table::TPlanes.headers;
+  if(tableName == "flights") headers = Table::TFlights.getHeaders();
+  else if(tableName == "passangers") headers = Table::TPassangers.getHeaders();
+  else if(tableName == "planes") headers = Table::TPlanes.getHeaders();
 
   return headers;
 }
 
 void Cmd::find(string tableName) {
-  vector<vector<string>> results;
-  vector<vector<string>> tableToRender;
   vector<string> headers = getHeadersByTableName(tableName);
-  tableToRender.push_back(headers);
 
   if(headers.size()) {
-    printSubstitutions(headers);
-    string expression = getWhereClause();
-    if(tableName == "flights") {
-      results = Flight::find(expression);
-      tableToRender.insert(tableToRender.end(), results.begin(), results.end());
-      Table::TFlights.renderTable(tableToRender);
-    }
+    vector<vector<string>> results;
+    string expression = getWhereClause(headers);
+
+    if(tableName == "flights") results = Flight::find(expression);
+
+    if(results.size()) {
+      Renderer resultingTable(headers, results);
+      resultingTable.render();
+    } else enoentMsg();
   }
-  else return invalid();
+  else return noTableMsg(tableName);
 }
 
 void Cmd::update(string tableName) {
-  vector<vector<string>> results;
-  vector<vector<string>> tableToRender;
   vector<string> headers = getHeadersByTableName(tableName);
-  tableToRender.push_back(headers);
 
   if(headers.size()) {
-    printSubstitutions(headers);
-    string expression = getWhereClause();
-
+    vector<vector<string>> results;
+    string expression = getWhereClause(headers);
     vector<string> replacements = getReplacements(headers);
 
-    if(tableName == "flights") {
-      results = Flight::update(expression, replacements);
-      tableToRender.insert(tableToRender.end(), results.begin(), results.end());
-      Table::TFlights.renderTable(tableToRender);
-    }
+    if(tableName == "flights") results = Flight::update(expression, replacements);
+
+    if(results.size()) {
+      Renderer resultingTable(headers, results);
+      resultingTable.render();
+    } else enoentMsg();
   }
-  else return invalid();
+  else return noTableMsg(tableName);
 }
+
+typedef void (*Remover)(string);
 
 void Cmd::remove(string tableName) {
   vector<string> headers = getHeadersByTableName(tableName);
+
   if(headers.size()) {
-    printSubstitutions(headers);
-    string expression = getWhereClause();
-    if(tableName == "flights") Flight::remove(expression);
+    string expression = getWhereClause(headers);
+    vector<vector<string>> results;
+    Remover remover;
+    if(tableName == "flights") { results = Flight::find(expression); remover = Flight::remove; }
+
+    if(results.size()) {
+      cout << "The following fields will be permanently deleted." << endl;
+      Renderer resultingTable(headers, results);
+      resultingTable.render();
+      cout << "Do you want to continue? (Y/n): ";
+      string answer;
+      getline(cin, answer);
+      if(answer[0] == 'Y' || answer[0] == 'y') remover(expression);
+      else cout << "Aborting..." << endl;
+    }
+    else enoentMsg();
   }
-  else return invalid();
+  else return noTableMsg(tableName);
 }
 
 void Cmd::tables() {

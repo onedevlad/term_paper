@@ -5,32 +5,10 @@
 #include <vector>
 
 #include "Table.h"
+#include "Renderer.h"
 
 using namespace std;
 
-vector<string> Table::readFile() {
-  string line;
-  vector<string> file;
-
-  ifstream fss ("./storage/" + tableName + ".txt");
-  while(getline(fss, line)) file.push_back(line);
-  fss.close();
-
-  return file;
-};
-
-void Table::writeFile(vector<vector<string>> data) {
-  ofstream table;
-  table.open("./storage/" + tableName + ".txt");
-  for(int i=0; i<data.size(); i++) {
-    for(int j=0; j<data[i].size(); j++) {
-      table << data[i][j];
-      if(j != data[i].size() - 1) table << '\t';
-    }
-    table << endl;
-  }
-  table.close();
-}
 
 void Table::parse(vector<string> file, void (*factoryCB)(vector<string>, bool)) {
   for(int i=0; i<file.size(); i++) {
@@ -47,13 +25,17 @@ void Table::parse(vector<string> file, void (*factoryCB)(vector<string>, bool)) 
 }
 
 void Table::render() {
-  renderTable(serializer());
+  Renderer table(serializer());
+  table.render();
 }
 
-Table::Table(string _tableName, vector<vector<string>> (*_serializer)()) {
+vector<string> Table::getHeaders() {
+  return headers;
+}
+
+Table::Table(string _tableName, vector<vector<string>> (*_serializer)(), void (*_factory)(vector<string>, bool)) {
   tableName = _tableName;
   serializer = _serializer;
-  // Wouldn't it be nice to do smth like this?
-  // parse(readFile(), factory);
-  // NO. (c) G++ devs.
+
+  parse(readFile(), _factory);
 }
