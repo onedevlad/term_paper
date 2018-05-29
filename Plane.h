@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "Entry.hpp"
+
 using namespace std;
 
-class Plane {
+class Plane : protected Entry {
   private:
     static vector<Plane> planes;
     string planeID;
@@ -14,9 +16,14 @@ class Plane {
 
   public:
     static vector<vector<string>> serialize();
-    static vector<string> serializeLn(Plane);
-    static void load();
+    static void updateFS();
+    static vector<vector<string>> find(string);
+    static vector<vector<string>> update(string, vector<string>);
+    static void remove(string);
     static void factory(vector<string>, bool);
+
+    vector<string> serializeLn();
+    void setFields(vector<string>);
     Plane(vector<string>);
 };
 

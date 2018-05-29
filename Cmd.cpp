@@ -16,7 +16,6 @@ void Cmd::invalidMsg() {
   cout << "Invalid query." << endl;
 }
 
-
 void Cmd::simpleHandler(string cmd) {
   if(cmd == "help") help();
   else if(cmd == "tables") tables();
@@ -141,6 +140,8 @@ void Cmd::find(string tableName) {
     string expression = getWhereClause(headers);
 
     if(tableName == "flights") results = Flight::find(expression);
+    if(tableName == "planes") results = Plane::find(expression);
+    if(tableName == "passangers") results = Passanger::find(expression);
 
     if(results.size()) {
       Renderer resultingTable(headers, results);
@@ -159,6 +160,8 @@ void Cmd::update(string tableName) {
     vector<string> replacements = getReplacements(headers);
 
     if(tableName == "flights") results = Flight::update(expression, replacements);
+    if(tableName == "planes") results = Plane::update(expression, replacements);
+    if(tableName == "passanger") results = Passanger::update(expression, replacements);
 
     if(results.size()) {
       Renderer resultingTable(headers, results);
@@ -178,6 +181,8 @@ void Cmd::remove(string tableName) {
     vector<vector<string>> results;
     Remover remover;
     if(tableName == "flights") { results = Flight::find(expression); remover = Flight::remove; }
+    if(tableName == "planes") { results = Plane::find(expression); remover = Plane::remove; }
+    if(tableName == "passanger") { results = Passanger::find(expression); remover = Passanger::remove; }
 
     if(results.size()) {
       cout << "The following fields will be permanently deleted." << endl;

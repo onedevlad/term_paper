@@ -1,15 +1,14 @@
-#include <string>
-#include <vector>
-
 #ifndef FLIGHT_H
 #define FLIGHT_H
 
+#include <string>
+#include <vector>
+
+#include "Entry.hpp"
+
 using namespace std;
 
-#include "Table.h"
-
-
-class Flight {
+class Flight : protected Entry {
   private:
     static vector<Flight> flights;
     string flightID;
@@ -19,17 +18,17 @@ class Flight {
     string arrivalDate;
     string arrivalTime;
     string planeID;
-    void setFields(vector<string>);
-    static void updateFS();
-    static vector<Flight*> getMatchingFlights(string);
-    static vector<string> serializeLn(Flight);
 
   public:
     static vector<vector<string>> serialize();
+    static void updateFS();
     static vector<vector<string>> find(string);
     static vector<vector<string>> update(string, vector<string>);
     static void remove(string);
     static void factory(vector<string>, bool);
+
+    vector<string> serializeLn();
+    void setFields(vector<string>);
     Flight(vector<string>);
 };
 

@@ -1,0 +1,90 @@
+#ifndef ENTRY_H
+#define ENTRY_H
+
+#include <string>
+#include <vector>
+
+#include "ExpressionBuilder.h"
+#include "Table.h"
+
+using namespace std;
+
+
+class Entry {
+  protected:
+    template<class T> static vector<T*> getMatchingEntries(string, vector<T>&);
+    template<class T> static vector<vector<string>> findEntries(string, vector<T>&);
+    template<class T> static vector<vector<string>> serializeEntries(Table&, vector<T>&);
+    template<class T> static void removeEntries(string, vector<T>&);
+    template<class T> static void entriesFactory(vector<T>&, vector<string>, bool);
+    template<class T> static vector<vector<string>> updateEntries(string, vector<string>, vector<T>&);
+};
+
+
+template<class T>
+vector<T*> Entry::getMatchingEntries(string query, vector<T>& entries) {
+  vector<T*> result;
+
+  for(int i=0; i<entries.size(); i++) {
+    vector<string> line = entries[i].serializeLn();
+    ExpressionBuilder expression = ExpressionBuilder(line);
+    bool lineMatches = expression.parse(query);
+    if(lineMatches) result.push_back(&entries[i]);
+  }
+
+  return result;
+}
+
+template<class T>
+vector<vector<string>> Entry::findEntries(string query, vector<T>& entries) {
+  vector<vector<string>> result;
+  vector<T*> matchingEntries = getMatchingEntries(query, entries);
+
+  for(int i=0; i<matchingEntries.size(); i++)
+    result.push_back(matchingEntries[i]->serializeLn());
+   return result;
+}
+
+template<class T>
+vector<vector<string>> Entry::serializeEntries(Table& parent, vector<T>& entries) {
+  vector<vector<string>> result;
+  result.push_back(parent.getHeaders());
+
+  for(int i=0; i<entries.size(); i++)
+    result.push_back(entries[i].serializeLn());
+
+  return result;
+}
+
+template<class T>
+void Entry::removeEntries(string query, vector<T>& entries) {
+  for(int i=0; i<entries.size(); i++) {
+    ExpressionBuilder expression = ExpressionBuilder(entries[i].serializeLn());
+    bool lineMatches = expression.parse(query);
+    if(lineMatches) entries.erase(entries.begin() + i);
+  }
+  T::updateFS();
+}
+
+template<class T>
+void Entry::entriesFactory(vector<T>& entries, vector<string> rawData, bool fsSync) {
+  T obj(rawData);
+  entries.push_back(obj);
+  if(fsSync) T::updateFS();
+}
+
+template<class T>
+vector<vector<string>> Entry::updateEntries(string query, vector<string> fields, vector<T>& entries) {
+  vector<vector<string>> result;
+  vector<T*> matchingEntries = getMatchingEntries(query, entries);
+
+  for(int i=0; i<matchingEntries.size(); i++) {
+    matchingEntries[i]->setFields(fields);
+    result.push_back(matchingEntries[i]->serializeLn());
+  }
+
+  T::updateFS();
+  return result;
+}
+
+#endif

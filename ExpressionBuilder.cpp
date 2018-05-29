@@ -52,14 +52,12 @@ int ExpressionBuilder::getOperatorPriority(string x) {
   if(x == "&&") return 2;
   if(x == "||") return 3;
 
-  cout << "Warning: Syntax error near " << x << endl;
+  cout << "Warning: Syntax error near " << x << '.' << endl;
   return -1;
 }
 
 
 int ExpressionBuilder::typeResolver(string opp, string lOperand, string rOperand) {
-  // cout << "TYPE: " << lOperand << opp << rOperand << endl;
-  // cout << "Returning: " <<  executor(opp, lOperand, rOperand) << endl;
   int lInt = Utils::strToInt(lOperand);
   int rInt = Utils::strToInt(rOperand);
 
@@ -71,7 +69,6 @@ int ExpressionBuilder::typeResolver(string opp, string lOperand, string rOperand
 }
 
 int ExpressionBuilder::interpolationResolver(string opp, string _lOperand, string _rOperand) {
-  // cout << "INTERPOLATION: " << _lOperand << opp << _rOperand << endl;
   string lOperand = _lOperand;
   string rOperand = _rOperand;
   int lInt = Utils::strToInt(_lOperand.substr(1, _lOperand.length()-1));
@@ -84,13 +81,10 @@ int ExpressionBuilder::interpolationResolver(string opp, string _lOperand, strin
   if(_lOperand[0] == '$' && lIntInRange) lOperand = substitutions[lInt];
   if(_rOperand[0] == '$' && rIntInRange) rOperand = substitutions[rInt];
 
-
-  // cout << "L: " << lOperand.length() << " R: " << rOperand.length() << endl;
   return typeResolver(opp, lOperand, rOperand);
 }
 
 int ExpressionBuilder::priorityResolver(string query) {
-  // cout << "PRIORITY: " << query << endl;
   int queryEnd = query.length();
   bool hasSpecialSymbols = false;
   int urgentOperatorPriority = 100;
@@ -158,17 +152,13 @@ int ExpressionBuilder::priorityResolver(string query) {
 
     return priorityResolver(cmdBefore + to_string(interpolationResolver(opp, lOperand, rOperand)) + cmdAfter);
   } else {
-    // cout << "LITERAL: " << stoi(query) << endl;
     int queryInt = Utils::strToInt(query);
     if(queryInt < 1) return 0;
     else return queryInt;
-    // return stoi(query);
   }
 }
 
 int ExpressionBuilder::parenthesisResolver(string query) {
-  // cout << "QUERY: " << query << endl;
-
   int queryEnd = query.length();
   vector<int> openParenthesis;
   int currentLvl = -1;

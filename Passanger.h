@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "Entry.hpp"
+
 using namespace std;
 
-class Passanger {
+class Passanger : protected Entry {
   private:
     static vector<Passanger> passangers;
     string passangerID;
@@ -16,8 +18,14 @@ class Passanger {
 
   public:
     static vector<vector<string>> serialize();
-    static vector<string> serializeLn(Passanger);
+    static void updateFS();
+    static vector<vector<string>> find(string);
+    static vector<vector<string>> update(string, vector<string>);
+    static void remove(string);
     static void factory(vector<string>, bool);
+
+    vector<string> serializeLn();
+    void setFields(vector<string>);
     Passanger(vector<string>);
 };
 

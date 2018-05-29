@@ -4,40 +4,51 @@
 
 #include "Passanger.h"
 #include "Table.h"
-#include "Utils.h"
 
 using namespace std;
 
 
 vector<vector<string>> Passanger::serialize() {
-  vector<vector<string>> result;
-  result.push_back(Table::TPassangers.getHeaders());
-
-  for(int i=0; i<passangers.size(); i++) result.push_back(serializeLn(passangers[i]));
-
-  return result;
+  return serializeEntries(Table::TPassangers, passangers);
 }
 
-vector<string> Passanger::serializeLn(Passanger obj) {
-  vector<string> result;
-  result.push_back(obj.passangerID);
-  result.push_back(obj.lastName);
-  result.push_back(obj.firstName);
-  result.push_back(obj.flightID);
+vector<vector<string>> Passanger::find(string query) {
+  return findEntries(query, passangers);
+}
 
-  return result;
+vector<vector<string>> Passanger::update(string query, vector<string> fields) {
+  return updateEntries(query, fields, passangers);
+}
+
+void Passanger::remove(string query) {
+  return removeEntries(query, passangers);
+}
+
+void Passanger::updateFS() {
+  return Table::TPassangers.writeFile(serialize());
 }
 
 void Passanger::factory(vector<string> rawData, bool fsSync) {
-  Passanger obj(rawData);
-  passangers.push_back(obj);
+  return entriesFactory(passangers, rawData, fsSync);
+}
 
-  if(fsSync) Table::TPassangers.writeFile(serialize());
+vector<string> Passanger::serializeLn() {
+  vector<string> result;
+  result.push_back(passangerID);
+  result.push_back(lastName);
+  result.push_back(firstName);
+  result.push_back(flightID);
+
+  return result;
+}
+
+void Passanger::setFields (vector<string> rawData) {
+  if(rawData[0].length()) passangerID = rawData[0];
+  if(rawData[1].length()) lastName = rawData[1];
+  if(rawData[2].length()) firstName = rawData[2];
+  if(rawData[3].length()) flightID = rawData[3];
 }
 
 Passanger::Passanger(vector<string> rawData) {
-  passangerID = rawData[0];
-  lastName = rawData[1];
-  firstName = rawData[2];
-  flightID = rawData[3];
+  setFields(rawData);
 }

@@ -4,34 +4,47 @@
 
 #include "Plane.h"
 #include "Table.h"
-#include "Utils.h"
+#include "ExpressionBuilder.h"
 
 using namespace std;
 
 vector<vector<string>> Plane::serialize() {
-  vector<vector<string>> result;
-  result.push_back(Table::TPlanes.getHeaders());
-
-  for(int i=0; i<planes.size(); i++) result.push_back(serializeLn(planes[i]));
-
-  return result;
+  return serializeEntries(Table::TPlanes, planes);
 }
 
-vector<string> Plane::serializeLn(Plane obj) {
-  vector<string> result;
-  result.push_back(obj.planeID);
-  result.push_back(obj.maxPassangersCount);
+vector<vector<string>> Plane::find(string query) {
+  return findEntries(query, planes);
+}
 
-  return result;
+vector<vector<string>> Plane::update(string query, vector<string> fields) {
+  return updateEntries(query, fields, planes);
+}
+
+void Plane::remove(string query) {
+  return removeEntries(query, planes);
+}
+
+void Plane::updateFS() {
+  return Table::TPlanes.writeFile(serialize());
 }
 
 void Plane::factory(vector<string> rawData, bool fsSync) {
-  Plane obj(rawData);
-  planes.push_back(obj);
-  if(fsSync) Table::TPlanes.writeFile(serialize());
+  return entriesFactory(planes, rawData, fsSync);
+}
+
+vector<string> Plane::serializeLn() {
+  vector<string> result;
+  result.push_back(planeID);
+  result.push_back(maxPassangersCount);
+
+  return result;
+}
+
+void Plane::setFields (vector<string> rawData) {
+  if(rawData[0].length()) planeID = rawData[0];
+  if(rawData[1].length()) maxPassangersCount = rawData[1];
 }
 
 Plane::Plane(vector<string> rawData) {
-  planeID = rawData[0];
-  maxPassangersCount = rawData[1];
+  setFields(rawData);
 }
