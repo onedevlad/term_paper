@@ -7,6 +7,7 @@
 #include "Passanger.h"
 #include "Plane.h"
 
+// #include <vector>
 
 using namespace std;
 
@@ -19,7 +20,6 @@ Table Table::TPassangers = Table("Passangers", Passanger::serialize, Passanger::
 Table Table::TPlanes = Table("Planes", Plane::serialize, Plane::factory);
 
 int main() {
-
   cout << endl << "Type `help` for help." << endl << endl;
 
   while(true) {

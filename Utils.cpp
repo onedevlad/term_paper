@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -59,6 +60,14 @@ int Utils::askForInt(string item, int minBound, int maxBound) {
     goto enter;
   }
   return enteredInt;
+}
+
+vector<string> Utils::strSplitBySpace(string str) {
+  istringstream iss(str);
+  vector<string> words;
+  string word;
+  while(getline(iss, word, ' ')) words.push_back(word);
+  return words;
 }
 
 string Utils::askForStr(string item) {

@@ -11,7 +11,7 @@ class FS {
     string tableName;
   public:
     vector<string> readFile();
-    void writeFile(vector<vector<string>>);
+    void writeFile(vector<vector<string>> const&);
 };
 
 #endif

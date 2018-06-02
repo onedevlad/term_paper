@@ -1,18 +1,24 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <vector>
+#include <string>
+
+using namespace std;
+
 class Utils {
   public:
-    static std::string enterPrompt;
-    static std::string trim(const std::string&);
-    static std::string replaceChar(std::string, char, char);
-    static std::string slice(std::string, int, int);
-    static bool isNumber(const std::string&);
-    static bool contains(std::string, std::string);
-    static bool contains(std::string, char);
-    static int strToInt(std::string);
-    static int askForInt(std::string, int, int);
-    static std::string askForStr(std::string);
+    static string enterPrompt;
+    static string trim(const string&);
+    static string replaceChar(string, char, char);
+    static string slice(string, int, int);
+    static bool isNumber(const string&);
+    static bool contains(string, string);
+    static bool contains(string, char);
+    static int strToInt(string);
+    static int askForInt(string, int, int);
+    static vector<string> strSplitBySpace(string);
+    static string askForStr(string);
 };
 
 #endif

@@ -16,7 +16,7 @@ vector<string> FS::readFile() {
   return file;
 };
 
-void FS::writeFile(vector<vector<string>> data) {
+void FS::writeFile(vector<vector<string>> const& data) {
   ofstream table;
   table.open("./storage/" + tableName + ".txt");
   for(int i=0; i<data.size(); i++) {
