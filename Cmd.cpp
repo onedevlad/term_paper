@@ -10,6 +10,8 @@
 #include "Passanger.h"
 #include "Plane.h"
 
+#include "Vector.hpp"
+
 using namespace std;
 
 void Cmd::invalidMsg() {
@@ -142,7 +144,6 @@ void Cmd::find(string const& tableName, string const& expression) {
     if(tableName == "flights") results = Flight::find(expression);
     if(tableName == "planes") results = Plane::find(expression);
     if(tableName == "passangers") results = Passanger::find(expression);
-
     if(results.size()) {
       Renderer resultingTable(headers, results);
       resultingTable.render();

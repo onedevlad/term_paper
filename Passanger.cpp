@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #include "Passanger.h"
 #include "Table.h"
@@ -21,15 +21,16 @@ vector<vector<string>> Passanger::update(string query, vector<string> fields) {
 }
 
 void Passanger::remove(string query) {
-  return removeEntries(query, passangers);
+  removeEntries(query, passangers);
 }
 
 void Passanger::updateFS() {
-  return Table::TPassangers.writeFile(serialize());
+  vector<vector<string>> data = serialize();
+  Table::TPassangers.writeFile(data);
 }
 
 void Passanger::factory(vector<string> rawData, bool fsSync) {
-  return entriesFactory(passangers, rawData, fsSync);
+  entriesFactory(passangers, rawData, fsSync);
 }
 
 vector<string> Passanger::serializeLn() {
@@ -52,3 +53,5 @@ void Passanger::setFields (vector<string> rawData) {
 Passanger::Passanger(vector<string> rawData) {
   setFields(rawData);
 }
+
+Passanger::Passanger(){}

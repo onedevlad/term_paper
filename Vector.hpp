@@ -1,6 +1,9 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <iostream>
+#include <typeinfo>
+
 using namespace std;
 
 template<typename T> class vector {
@@ -16,6 +19,8 @@ template<typename T> class vector {
     void push_back(T);
     void erase(int);
     int size();
+    T& back();
+
 
     T& operator[](int);
 };
@@ -34,12 +39,15 @@ template<typename T> vector<T>::vector() {
   initArray(0);
 }
 
+
 template<typename T> vector<T>::~vector() {
-  delete[] arr;
+  // Should be deleted properly via delete[], however SEGFAULT occurs.
+  // if(arr != NULL) delete[] arr;
+  // delete[] arr;
 }
 
 template<typename T> void vector<T>::push_back(T value) {
-  T* tmp = new T[curr_size+1];
+  T* tmp = new T[curr_size + 1];
 
   for(int i=0; i<curr_size; i++) tmp[i] = arr[i];
   tmp[curr_size] = value;
@@ -67,5 +75,10 @@ template<typename T> T& vector<T>::operator[](int i) {
 template<typename T> int vector<T>::size() {
   return curr_size;
 }
+
+template<typename T> T& vector<T>::back() {
+  return arr[curr_size-1];
+}
+
 
 #endif

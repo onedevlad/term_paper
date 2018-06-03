@@ -2,7 +2,7 @@
 #define PLANE_H
 
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #include "Entry.hpp"
 
@@ -25,6 +25,7 @@ class Plane : protected Entry {
     vector<string> serializeLn();
     void setFields(vector<string>);
     Plane(vector<string>);
+    Plane();
 };
 
 #endif

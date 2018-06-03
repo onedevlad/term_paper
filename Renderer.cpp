@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include "Vector.hpp"
 #include <string>
 
 #include "Renderer.h"
@@ -65,7 +65,8 @@ Renderer::Renderer(vector<vector<string>> _table) {
 Renderer::Renderer(vector<string> headers, vector<vector<string>> data) {
   vector<vector<string>> _table;
   _table.push_back(headers);
-  _table.insert(_table.end(), data.begin(), data.end());
+  for(int i=0; i<data.size(); i++) _table.push_back(data[i]);
+  // _table.insert(_table.end(), data.begin(), data.end());
 
   table = _table;
   analyse();

@@ -2,7 +2,7 @@
 #define PASSANGER_H
 
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #include "Entry.hpp"
 
@@ -27,6 +27,7 @@ class Passanger : protected Entry {
     vector<string> serializeLn();
     void setFields(vector<string>);
     Passanger(vector<string>);
+    Passanger();
 };
 
 #endif

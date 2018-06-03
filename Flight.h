@@ -2,7 +2,8 @@
 #define FLIGHT_H
 
 #include <string>
-#include <vector>
+#include "Vector.hpp"
+
 
 #include "Entry.hpp"
 
@@ -30,6 +31,7 @@ class Flight : protected Entry {
     vector<string> serializeLn();
     void setFields(vector<string>);
     Flight(vector<string>);
+    Flight();
 };
 
 

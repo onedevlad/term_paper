@@ -1,13 +1,15 @@
 #include <iostream>
+#include <string>
+#include <typeinfo>
 
 #include "Cmd.h"
 #include "Table.h"
-
 #include "Flight.h"
 #include "Passanger.h"
 #include "Plane.h"
 
-// #include <vector>
+#include "Vector.hpp"
+
 
 using namespace std;
 
@@ -33,5 +35,6 @@ int main() {
   }
 
   cout << endl;
+
   return 0;
 }

@@ -1,10 +1,9 @@
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 #include <iostream>
 
 #include "ExpressionBuilder.h"
 #include "Utils.h"
-// #include <vector>
 
 
 using namespace std;
@@ -90,7 +89,10 @@ int ExpressionBuilder::priorityResolver(string query) {
   int queryEnd = query.length();
   bool hasSpecialSymbols = false;
   int urgentOperatorPriority = 100;
-  vector<int> urgentOperatorPos {-1, -1};
+  // vector<int> urgentOperatorPos {-1, -1};
+  vector<int> urgentOperatorPos;
+  urgentOperatorPos.push_back(-1);
+  urgentOperatorPos.push_back(-1);
   vector<vector<int>> allCmdsPos;
 
   string currOperator;
@@ -111,7 +113,11 @@ int ExpressionBuilder::priorityResolver(string query) {
           urgentOperatorPos[0] = currOperatorStartPos;
           urgentOperatorPos[1] = i-1;
         }
-        vector<int> tmp = {currOperatorStartPos, i-1};
+        // vector<int> tmp = {currOperatorStartPos, i-1};
+        vector<int> tmp;
+        tmp.push_back(currOperatorStartPos);
+        tmp.push_back(i-1);
+
         allCmdsPos.push_back(tmp);
       }
       currOperator.clear();
@@ -178,7 +184,8 @@ int ExpressionBuilder::parenthesisResolver(string query) {
       if(query[i] == ')') {
         if(currentLvl > deepestLvl) {
           deepestCmdPos[0] = openParenthesis.back();
-          openParenthesis.pop_back();
+          // openParenthesis.pop_back();
+          openParenthesis.erase(openParenthesis.size()-1);
           deepestCmdPos[1] = i;
           deepestLvl = currentLvl;
         }

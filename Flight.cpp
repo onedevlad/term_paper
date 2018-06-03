@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 #include <iostream>
 
 #include "Flight.h"
@@ -21,15 +21,16 @@ vector<vector<string>> Flight::update(string query, vector<string> fields) {
 }
 
 void Flight::remove(string query) {
-  return removeEntries(query, flights);
+  removeEntries(query, flights);
 }
 
 void Flight::updateFS() {
-  return Table::TFlights.writeFile(serialize());
+  vector<vector<string>> data = serialize();
+  Table::TFlights.writeFile(data);
 }
 
 void Flight::factory(vector<string> rawData, bool fsSync) {
-  return entriesFactory(flights, rawData, fsSync);
+  entriesFactory(flights, rawData, fsSync);
 }
 
 void Flight::setFields (vector<string> rawData) {
@@ -57,3 +58,5 @@ vector<string> Flight::serializeLn() {
 Flight::Flight(vector<string> rawData) {
   setFields(rawData);
 }
+
+Flight::Flight(){};

@@ -1,7 +1,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #include "FS.h"
 
@@ -16,7 +16,7 @@ vector<string> FS::readFile() {
   return file;
 };
 
-void FS::writeFile(vector<vector<string>> const& data) {
+void FS::writeFile(vector<vector<string>>& data) {
   ofstream table;
   table.open("./storage/" + tableName + ".txt");
   for(int i=0; i<data.size(); i++) {

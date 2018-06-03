@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #ifndef FS_H
 #define FS_H
@@ -11,7 +11,7 @@ class FS {
     string tableName;
   public:
     vector<string> readFile();
-    void writeFile(vector<vector<string>> const&);
+    void writeFile(vector<vector<string>>&);
 };
 
 #endif

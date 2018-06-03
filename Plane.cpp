@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include "Vector.hpp"
 
 #include "Plane.h"
 #include "Table.h"
@@ -21,15 +21,17 @@ vector<vector<string>> Plane::update(string query, vector<string> fields) {
 }
 
 void Plane::remove(string query) {
-  return removeEntries(query, planes);
+  removeEntries(query, planes);
 }
 
 void Plane::updateFS() {
-  return Table::TPlanes.writeFile(serialize());
+  vector<vector<string>> data = serialize();
+
+  Table::TPlanes.writeFile(data);
 }
 
 void Plane::factory(vector<string> rawData, bool fsSync) {
-  return entriesFactory(planes, rawData, fsSync);
+  entriesFactory(planes, rawData, fsSync);
 }
 
 vector<string> Plane::serializeLn() {
@@ -48,3 +50,5 @@ void Plane::setFields (vector<string> rawData) {
 Plane::Plane(vector<string> rawData) {
   setFields(rawData);
 }
+
+Plane::Plane(){}
