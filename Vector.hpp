@@ -14,11 +14,11 @@ template<typename T> class vector {
   public:
     vector(int);
     vector();
-    ~vector();
 
     void push_back(T);
     void erase(int);
     int size();
+    int isValidIndex(int);
     T& back();
 
 
@@ -29,6 +29,11 @@ template<typename T> void vector<T>::initArray(int size) {
   arr = new T[size];
 }
 
+
+template<typename T> int vector<T>::isValidIndex(int index) {
+  return index >= 0 && index < curr_size;
+}
+
 template<typename T> vector<T>::vector(int size) {
   curr_size = size;
   initArray(size);
@@ -37,13 +42,6 @@ template<typename T> vector<T>::vector(int size) {
 template<typename T> vector<T>::vector() {
   curr_size = 0;
   initArray(0);
-}
-
-
-template<typename T> vector<T>::~vector() {
-  // Should be deleted properly via delete[], however SEGFAULT occurs.
-  // if(arr != NULL) delete[] arr;
-  // delete[] arr;
 }
 
 template<typename T> void vector<T>::push_back(T value) {
@@ -58,10 +56,10 @@ template<typename T> void vector<T>::push_back(T value) {
 }
 
 template<typename T> void vector<T>::erase(int n) {
-  if(n > curr_size) return;
+  if(!isValidIndex(n)) return;
 
   T* tmp = new T[curr_size];
-  for(int i=0; i<curr_size; i++) tmp[i] = i < n ? arr[i] : arr[i+1];
+  for(int i=0; i<curr_size-1; i++) tmp[i] = i < n ? arr[i] : arr[i+1];
 
   arr = tmp;
 
@@ -69,6 +67,7 @@ template<typename T> void vector<T>::erase(int n) {
 }
 
 template<typename T> T& vector<T>::operator[](int i) {
+  if(!isValidIndex(i)) return arr[0];
   return arr[i];
 }
 

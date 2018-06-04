@@ -2,6 +2,7 @@
 #include <string>
 #include "Vector.hpp"
 
+#include "Utils.h"
 #include "Passanger.h"
 #include "Table.h"
 
@@ -38,16 +39,18 @@ vector<string> Passanger::serializeLn() {
   result.push_back(passangerID);
   result.push_back(lastName);
   result.push_back(firstName);
+  result.push_back(seat);
   result.push_back(flightID);
 
   return result;
 }
 
 void Passanger::setFields (vector<string> rawData) {
-  if(rawData[0].length()) passangerID = rawData[0];
-  if(rawData[1].length()) lastName = rawData[1];
-  if(rawData[2].length()) firstName = rawData[2];
-  if(rawData[3].length()) flightID = rawData[3];
+  if(Utils::isRawItemValid(rawData, 0)) passangerID = rawData[0];
+  if(Utils::isRawItemValid(rawData, 1)) lastName = rawData[1];
+  if(Utils::isRawItemValid(rawData, 2)) firstName = rawData[2];
+  if(Utils::isRawItemValid(rawData, 3)) seat = rawData[3];
+  if(Utils::isRawItemValid(rawData, 4)) flightID = rawData[3];
 }
 
 Passanger::Passanger(vector<string> rawData) {

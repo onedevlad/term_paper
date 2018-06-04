@@ -2,9 +2,9 @@
 #include <string>
 #include "Vector.hpp"
 
+#include "Utils.h"
 #include "Plane.h"
 #include "Table.h"
-#include "ExpressionBuilder.h"
 
 using namespace std;
 
@@ -37,14 +37,22 @@ void Plane::factory(vector<string> rawData, bool fsSync) {
 vector<string> Plane::serializeLn() {
   vector<string> result;
   result.push_back(planeID);
+  result.push_back(planeName);
   result.push_back(maxPassangersCount);
+  result.push_back(maxSpeed);
+  result.push_back(fuelCapacity);
+  result.push_back(minRWYLength);
 
   return result;
 }
 
 void Plane::setFields (vector<string> rawData) {
-  if(rawData[0].length()) planeID = rawData[0];
-  if(rawData[1].length()) maxPassangersCount = rawData[1];
+  if(Utils::isRawItemValid(rawData, 0)) planeID = rawData[0];
+  if(Utils::isRawItemValid(rawData, 1)) planeName = rawData[1];
+  if(Utils::isRawItemValid(rawData, 2)) maxPassangersCount = rawData[2];
+  if(Utils::isRawItemValid(rawData, 3)) maxSpeed = rawData[3];
+  if(Utils::isRawItemValid(rawData, 4)) fuelCapacity = rawData[4];
+  if(Utils::isRawItemValid(rawData, 5)) minRWYLength = rawData[5];
 }
 
 Plane::Plane(vector<string> rawData) {

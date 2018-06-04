@@ -16,9 +16,8 @@ class Utils {
     static bool contains(string, string);
     static bool contains(string, char);
     static int strToInt(string);
-    static int askForInt(string, int, int);
     static vector<string> strSplitBySpace(string);
-    static string askForStr(string);
+    static bool isRawItemValid(vector<string>&, int);
 };
 
 #endif

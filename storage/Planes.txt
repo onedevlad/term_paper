@@ -1,4 +1,3 @@
-Plane ID	Max passangers
-QR507	485
-QP09	500
-123	500
+Plane ID	Plane Name	Max passangers	Max speed (knt)	Fuel Cap (hrs)	Min RWY length (m)
+QR507	Airbus A320	485	400	20	2000
+IP09	Cessna 140	20	200	8	1400

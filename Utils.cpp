@@ -46,22 +46,6 @@ int Utils::strToInt(string str) {
   return -1;
 }
 
-int Utils::askForInt(string item, int minBound, int maxBound) {
-  int enteredInt;
-
-  enter:
-    cout << Utils::enterPrompt << item << " ("<< minBound <<'-'<< maxBound << "): ";
-    string userInput;
-    getline(cin, userInput);
-
-  enteredInt = Utils::strToInt(Utils::trim(userInput));
-  if(enteredInt < minBound || enteredInt > maxBound) {
-    cout << "NaN value provided. Try again." << endl;
-    goto enter;
-  }
-  return enteredInt;
-}
-
 vector<string> Utils::strSplitBySpace(string str) {
   istringstream iss(str);
   vector<string> words;
@@ -70,9 +54,6 @@ vector<string> Utils::strSplitBySpace(string str) {
   return words;
 }
 
-string Utils::askForStr(string item) {
-  cout << Utils::enterPrompt << " " << item << ": ";
-  string userInput;
-  getline(cin, userInput);
-  return Utils::trim(userInput);
+bool Utils::isRawItemValid(vector<string>& rawData, int i) {
+  return rawData.isValidIndex(i) && rawData[i].length();
 }

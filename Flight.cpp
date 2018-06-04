@@ -2,6 +2,7 @@
 #include "Vector.hpp"
 #include <iostream>
 
+#include "Utils.h"
 #include "Flight.h"
 #include "Table.h"
 
@@ -34,19 +35,21 @@ void Flight::factory(vector<string> rawData, bool fsSync) {
 }
 
 void Flight::setFields (vector<string> rawData) {
-  if(rawData[0].length()) flightID = rawData[0];
-  if(rawData[1].length()) passangersCount = rawData[1];
-  if(rawData[2].length()) departureDate = rawData[2];
-  if(rawData[3].length()) departureTime = rawData[3];
-  if(rawData[4].length()) arrivalDate = rawData[4];
-  if(rawData[5].length()) arrivalTime = rawData[5];
-  if(rawData[6].length()) planeID = rawData[6];
+  if(Utils::isRawItemValid(rawData, 0)) flightID = rawData[0];
+  if(Utils::isRawItemValid(rawData, 1)) departureAirpt = rawData[1];
+  if(Utils::isRawItemValid(rawData, 2)) arrivalAirpt = rawData[2];
+  if(Utils::isRawItemValid(rawData, 3)) departureDate = rawData[3];
+  if(Utils::isRawItemValid(rawData, 4)) departureTime = rawData[4];
+  if(Utils::isRawItemValid(rawData, 5)) arrivalDate = rawData[5];
+  if(Utils::isRawItemValid(rawData, 6)) arrivalTime = rawData[6];
+  if(Utils::isRawItemValid(rawData, 7)) planeID = rawData[7];
 }
 
 vector<string> Flight::serializeLn() {
   vector<string> record;
   record.push_back(flightID);
-  record.push_back(passangersCount);
+  record.push_back(departureAirpt);
+  record.push_back(arrivalAirpt);
   record.push_back(departureDate);
   record.push_back(departureTime);
   record.push_back(arrivalDate);

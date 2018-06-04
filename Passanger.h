@@ -10,10 +10,11 @@ using namespace std;
 
 class Passanger : protected Entry {
   private:
-    static vector<Passanger> passangers;
+    static vector<Passanger*> passangers;
     string passangerID;
     string lastName;
     string firstName;
+    string seat;
     string flightID;
 
   public:

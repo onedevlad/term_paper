@@ -13,9 +13,9 @@
 
 using namespace std;
 
-vector<Flight> Flight::flights = {};
-vector<Passanger> Passanger::passangers = {};
-vector<Plane> Plane::planes = {};
+vector<Flight*> Flight::flights = {};
+vector<Passanger*> Passanger::passangers = {};
+vector<Plane*> Plane::planes = {};
 
 Table Table::TFlights = Table("Flights", Flight::serialize, Flight::factory);
 Table Table::TPassangers = Table("Passangers", Passanger::serialize, Passanger::factory);

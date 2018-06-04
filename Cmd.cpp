@@ -129,8 +129,8 @@ vector<string> Cmd::getHeadersByTableName(string const& tableName) {
   vector<string> headers;
 
   if(tableName == "flights") headers = Table::TFlights.getHeaders();
-  else if(tableName == "passangers") headers = Table::TPassangers.getHeaders();
   else if(tableName == "planes") headers = Table::TPlanes.getHeaders();
+  else if(tableName == "passangers") headers = Table::TPassangers.getHeaders();
 
   return headers;
 }
@@ -161,7 +161,7 @@ void Cmd::update(string const& tableName, string const& expression) {
 
     if(tableName == "flights") results = Flight::update(expression, replacements);
     if(tableName == "planes") results = Plane::update(expression, replacements);
-    if(tableName == "passanger") results = Passanger::update(expression, replacements);
+    if(tableName == "passangers") results = Passanger::update(expression, replacements);
 
     if(results.size()) {
       Renderer resultingTable(headers, results);
@@ -181,7 +181,7 @@ void Cmd::remove(string const& tableName, string const& expression) {
     Remover remover;
     if(tableName == "flights") { results = Flight::find(expression); remover = Flight::remove; }
     if(tableName == "planes") { results = Plane::find(expression); remover = Plane::remove; }
-    if(tableName == "passanger") { results = Passanger::find(expression); remover = Passanger::remove; }
+    if(tableName == "passangers") { results = Passanger::find(expression); remover = Passanger::remove; }
 
     if(results.size()) {
       cout << "The following fields will be permanently deleted." << endl;

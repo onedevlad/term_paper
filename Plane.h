@@ -10,9 +10,13 @@ using namespace std;
 
 class Plane : protected Entry {
   private:
-    static vector<Plane> planes;
+    static vector<Plane*> planes;
     string planeID;
+    string planeName;
     string maxPassangersCount;
+    string maxSpeed;
+    string fuelCapacity;
+    string minRWYLength;
 
   public:
     static vector<vector<string>> serialize();

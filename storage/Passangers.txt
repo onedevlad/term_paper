@@ -1,3 +1,6 @@
-Passanger ID	Last Name	First Name	Flight ID
-AB3141592	Ivanov	Ivan	NP2003
-AB2718281	Petrov	Petro	UI4923
+Passanger ID	Last Name	First Name	Seat	Flight ID
+AB3141592	Ivanov	Ivan	15A	NP2003
+AB2718281	Petrov	Petro	24B	UI4923
+AB2837211	Sydorov	Andriy	2B	UI4923
+AB8368636	Sydorova	Oksana	3B	UI4923
+AB8660260	Melnyk	Anastasia	14C	PSK667

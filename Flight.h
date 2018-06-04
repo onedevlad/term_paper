@@ -11,9 +11,10 @@ using namespace std;
 
 class Flight : protected Entry {
   private:
-    static vector<Flight> flights;
+    static vector<Flight*> flights;
     string flightID;
-    string passangersCount;
+    string departureAirpt;
+    string arrivalAirpt;
     string departureDate;
     string departureTime;
     string arrivalDate;
